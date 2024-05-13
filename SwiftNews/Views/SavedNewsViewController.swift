@@ -8,12 +8,8 @@
 import UIKit
 
 class SavedNewsViewController: UIViewController {
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
-
 }
 

@@ -96,6 +96,7 @@ class ArticleViewController: UIViewController {
         self.view.addSubview(imageView)
         self.view.addSubview(closeButton)
         self.view.addSubview(titleLabel)
+        self.view.addSubview(publishDateLabel)
         self.view.addSubview(authorLabel)
         self.view.addSubview(publishDateLabel)
         self.view.addSubview(contentLabel)
@@ -125,7 +126,11 @@ class ArticleViewController: UIViewController {
         NSLayoutConstraint.activate([
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             authorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            authorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+        ])
+        
+        NSLayoutConstraint.activate([
+            publishDateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            publishDateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
         
         NSLayoutConstraint.activate([
@@ -140,10 +145,19 @@ class ArticleViewController: UIViewController {
            let url = URL(string: urlToImage){
             imageView.downloaded(from: url, contentMode: .scaleAspectFill)
         }
+        
         self.titleLabel.text = article.title
         self.authorLabel.text = article.author
         self.contentLabel.text = article.content
-       
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        
+        let dateStr = article.publishedAt
+        if let date = formatter.date(from: dateStr) {
+            formatter.dateFormat = "MMM dd, yyyy"
+            publishDateLabel.text = formatter.string(from: date)
+        }
     }
     
     private func close(){
