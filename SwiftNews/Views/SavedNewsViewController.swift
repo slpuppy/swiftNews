@@ -7,11 +7,13 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SavedNewsViewController: UIViewController {
+    
+    let netService = NewsNetworkingService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        // Call the method to fetch news data
     }
 
 
