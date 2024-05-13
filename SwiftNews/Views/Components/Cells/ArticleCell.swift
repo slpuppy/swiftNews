@@ -111,7 +111,7 @@ class ArticleCell: UICollectionViewCell {
         ])
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: image.topAnchor, constant: 8),
+            titleLabel.topAnchor.constraint(equalTo: image.topAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: image.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -16),
         ])

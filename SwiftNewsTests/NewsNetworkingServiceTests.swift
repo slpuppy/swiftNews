@@ -10,19 +10,22 @@ import XCTest
 
 final class NewsNetworkingServiceTests: XCTestCase {
     
-    var service: NewsNetworkingService!
+    // system under test
+    var sut: NewsNetworkingService!
 
     override func setUpWithError() throws {
-        service = NewsNetworkingService()
-        
+        sut = NewsNetworkingService()
     }
 
     override func tearDownWithError() throws {
-        service = nil
+        sut = nil
     }
 
-    func test_getTopHeadlinesByCategoryForLocation_shouldReturnArticleList() throws {
+    func test_getTopHeadlinesByCategoryForLocation_shouldReturnArticleList() async throws {
+        let uut = try await sut.getTopHeadlinesByCategory(category: "technology")
         
+        XCTAssertEqual("ok", uut.status)
+        XCTAssertEqual(20, uut.articles?.count)
     }
 
     func testPerformanceExample() throws {

@@ -82,7 +82,6 @@ class NewsViewController: UIViewController {
             }
         }
     }
-    
 }
 
 extension NewsViewController: UICollectionViewDataSource {
@@ -103,7 +102,13 @@ extension NewsViewController: UICollectionViewDataSource {
             return cell
         }
     }
-
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let article = viewModel.articles?[indexPath.row] {
+            let articleViewController = ArticleViewController(article: article)
+            present(articleViewController, animated: true, completion: nil)
+        }
+    }
 }
 
 extension NewsViewController: UICollectionViewDelegateFlowLayout {
