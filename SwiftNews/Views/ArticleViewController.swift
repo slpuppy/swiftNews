@@ -24,9 +24,8 @@ class ArticleViewController: UIViewController {
     
     private lazy var imageView: UIImageView = {
        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
        return imageView
     }()
@@ -105,8 +104,11 @@ class ArticleViewController: UIViewController {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),      imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 300)
+            
         ])
         
         NSLayoutConstraint.activate([
@@ -143,7 +145,7 @@ class ArticleViewController: UIViewController {
     private func setupContent(article: Article) {
         if let urlToImage = article.urlToImage,
            let url = URL(string: urlToImage){
-            imageView.downloaded(from: url, contentMode: .scaleAspectFill)
+            imageView.downloaded(from: url)
         }
         
         self.titleLabel.text = article.title
@@ -155,7 +157,7 @@ class ArticleViewController: UIViewController {
         
         let dateStr = article.publishedAt
         if let date = formatter.date(from: dateStr) {
-            formatter.dateFormat = "MMM dd, yyyy"
+            formatter.dateFormat = "MMM dd, yyyy' - 'HH:mm"
             publishDateLabel.text = formatter.string(from: date)
         }
     }

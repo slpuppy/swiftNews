@@ -20,7 +20,7 @@ class ArticleCell: UICollectionViewCell {
     
     private lazy var image: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 10
         imageView.clipsToBounds = true
@@ -73,6 +73,7 @@ class ArticleCell: UICollectionViewCell {
         button.heightAnchor.constraint(equalToConstant: 30).isActive = true
         button.setTitle("Read More", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 11)
+        button.isUserInteractionEnabled = false
         return button
     }()
    
@@ -140,7 +141,7 @@ class ArticleCell: UICollectionViewCell {
         authorLabel.text = article.author?.uppercased()
         if let urlToImage = article.urlToImage,
            let url = URL(string: urlToImage) {
-            image.downloaded(from: url, contentMode: .scaleAspectFill)
+            image.downloaded(from: url)
             image.alpha = 1
         } else {
             image.alpha = 0
