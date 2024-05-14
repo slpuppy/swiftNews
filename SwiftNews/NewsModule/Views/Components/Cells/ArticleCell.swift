@@ -11,7 +11,7 @@ class ArticleCell: UICollectionViewCell {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -31,7 +31,7 @@ class ArticleCell: UICollectionViewCell {
         let view = UIView()
         view.backgroundColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.opacity = 0.8
+        view.layer.opacity = 0.7
         return view
     }()
     
@@ -123,7 +123,7 @@ class ArticleCell: UICollectionViewCell {
         ])
         
         NSLayoutConstraint.activate([
-            sourceLabel.topAnchor.constraint(equalTo: image.topAnchor, constant: 16),
+            sourceLabel.topAnchor.constraint(equalTo: image.topAnchor, constant: 20),
             sourceLabel.leadingAnchor.constraint(equalTo: image.leadingAnchor, constant: 16),
             sourceLabel.trailingAnchor.constraint(equalTo: image.trailingAnchor, constant: -16)
         ])
@@ -135,7 +135,7 @@ class ArticleCell: UICollectionViewCell {
         ])
         
         NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             descriptionLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             descriptionLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 50)

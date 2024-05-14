@@ -33,10 +33,10 @@ class NewsCollectionViewHeader: UIView {
     
     private lazy var title: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 32)
+        label.font = UIFont.monospacedSystemFont(ofSize: 36, weight: .black)
         label.textColor = .white
         label.numberOfLines = 1
-        label.text = "Fresh News"
+        label.text = "REALNEWS"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

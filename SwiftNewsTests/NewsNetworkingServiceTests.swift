@@ -10,7 +10,6 @@ import XCTest
 
 final class NewsNetworkingServiceTests: XCTestCase {
     
-    // system under test
     var sut: NewsNetworkingService!
 
     override func setUpWithError() throws {
@@ -21,8 +20,8 @@ final class NewsNetworkingServiceTests: XCTestCase {
         sut = nil
     }
 
-    func test_getTopHeadlinesByCategoryForLocation_shouldReturnArticleList() async throws {
-        let uut = try await sut.getTopHeadlinesByCategoryForLocation(category: NewsCategory.entertainment.rawValue, location: "us")
+    func test_getTopHeadlinesByCategoryForLocation_shouldReturn20ArticleList() async throws {
+        let uut = try await sut.getTopHeadlinesByCategoryForLocation(category: NewsCategory.entertainment.rawValue, location: "us", pageSize: 20, page: 1)
         
         XCTAssertEqual("ok", uut.status)
         XCTAssertEqual(20, uut.articles?.count)
