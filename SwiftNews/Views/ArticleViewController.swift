@@ -165,5 +165,4 @@ class ArticleViewController: UIViewController {
     private func close(){
         self.dismiss(animated: true)
     }
-    
 }

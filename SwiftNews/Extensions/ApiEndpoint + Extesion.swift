@@ -15,7 +15,7 @@ extension ApiEndpoint {
     var body: Data? { nil }
     var method: HTTPMethod { .get }
     var query: [String: String]? { nil }
-    var apiKey: String { "811f57392ca0459083864a50fc5fded4" }
+    var apiKey: String { "b971aaf9306041d59de71eb31bd62054" }
 }
 
 // MARK: - URL building
@@ -26,11 +26,11 @@ extension ApiEndpoint {
         var components = URLComponents()
         components.scheme = "https"
         components.host = domain
-     
+        
         
         if let query = query {
             components.queryItems = query.map { URLQueryItem(name: $0.key, value: $0.value)
-           }
+            }
             components.queryItems?.append(URLQueryItem(name: "apiKey", value: apiKey))
         }
         guard let url = components.url?
@@ -38,7 +38,8 @@ extension ApiEndpoint {
             .appendingPathComponent(path)
                 
         else { fatalError("Invalid url! \(self)") }
-     
+        
+        print(url)
         return url
     }
     

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NewsNetworkingServiceProtocol {
-    func getTopHeadlinesByCategoryForLocation(category: String, location: String) async throws -> ArticleListResponse
+    func getTopHeadlinesByCategoryForLocation(category: String, location: String, pageSize: Int, page: Int) async throws -> ArticleListResponse
 }
 
 class NewsNetworkingService: NewsNetworkingServiceProtocol {
@@ -24,8 +24,8 @@ class NewsNetworkingService: NewsNetworkingServiceProtocol {
         session = URLSession(configuration: configuration)
     }
     
-    func getTopHeadlinesByCategoryForLocation(category: String, location: String) async throws -> ArticleListResponse {
-           let endpoint = NewsEndpoint.topHeadlinesByCountry(category, location)
+    func getTopHeadlinesByCategoryForLocation(category: String, location: String, pageSize: Int, page: Int) async throws -> ArticleListResponse {
+           let endpoint = NewsEndpoint.topHeadlinesByCountry(category, location, pageSize, page)
            let (data, _) = try await session.data(for: endpoint.request)
            return try parser.parseNewsData(data: data)
        }

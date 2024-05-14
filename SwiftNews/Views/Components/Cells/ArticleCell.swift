@@ -31,7 +31,7 @@ class ArticleCell: UICollectionViewCell {
         let view = UIView()
         view.backgroundColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.opacity = 0.7
+        view.layer.opacity = 0.8
         return view
     }()
     
@@ -65,7 +65,7 @@ class ArticleCell: UICollectionViewCell {
         var config = UIButton.Configuration.filled()
         config.imagePlacement = .leading
         config.imagePadding = 8
-        config.baseBackgroundColor = UIColor(hex: "171717")
+        config.baseBackgroundColor = UIColor(hex: "212121")
         config.baseForegroundColor = UIColor.white
         config.cornerStyle = .capsule
         config.imagePlacement = .trailing
@@ -163,9 +163,6 @@ class ArticleCell: UICollectionViewCell {
            let url = URL(string: urlToImage) {
             image.downloaded(from: url)
             image.alpha = 1
-        } else {
-            image.alpha = 0
         }
     }
-   
 }

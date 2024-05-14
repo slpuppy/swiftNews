@@ -86,11 +86,10 @@ class NewsCollectionViewHeader: UIView {
         self.categoriesCollectionView.reloadData()
     }
     
-    func updateeSelectedCategory(selectedCategory: NewsCategory) {
+    func updateSelectedCategory(selectedCategory: NewsCategory) {
         self.selectedCategory = selectedCategory
         self.categoriesCollectionView.reloadData()
     }
-
 } 
 
 extension NewsCollectionViewHeader: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

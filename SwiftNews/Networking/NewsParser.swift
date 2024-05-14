@@ -7,12 +7,7 @@
 
 import Foundation
 
-protocol NewsParserProtocol {
-    func parseNewsData(data: Data) throws -> ArticleListResponse
-}
-
 class NewsParser: NewsParserProtocol {
-    
     func parseNewsData(data: Data) throws -> ArticleListResponse  {
         return try JSONDecoder().decode(ArticleListResponse.self, from: data)
     }

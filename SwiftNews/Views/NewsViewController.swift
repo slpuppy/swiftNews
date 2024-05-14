@@ -30,6 +30,7 @@ class NewsViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(ArticleCell.self, forCellWithReuseIdentifier: "ArticleNewsCell")
+        collectionView.register(LoadMoreFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: LoadMoreFooterView.reuseIdentifier)
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = UIColor(hex: "171717")
@@ -75,10 +76,14 @@ class NewsViewController: UIViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .absolute(200))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 1)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 16
         section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 16, trailing: 16)
+        let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50))
+        let footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize, elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
+        section.boundarySupplementaryItems = [footer]
+        
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
@@ -97,7 +102,8 @@ class NewsViewController: UIViewController {
     }
 }
 
-extension NewsViewController: NewsCollectionViewHeaderDelegate {
+extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterViewDelegate {
+    
     func didTapCategory(category: NewsCategory) {
         if category != viewModel.selectedCategory {
             viewModel.selectCategory(category: category)
@@ -105,7 +111,7 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate {
                 switch result {
                 case .success(_):
                     DispatchQueue.main.async {
-                        self?.headerView.updateeSelectedCategory(selectedCategory: category)
+                        self?.headerView.updateSelectedCategory(selectedCategory: category)
                         self?.collectionView.reloadData()
                     }
                 case .failure(_):
@@ -117,7 +123,18 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate {
         }
     }
     
-    
+    func didTapLoadMore() {
+        viewModel.loadMoreNews { [weak self] result in
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self?.collectionView.reloadData()
+                }
+            case .failure(_):
+                print("Failed to fetch")
+            }
+        }
+    }
 }
 
 extension NewsViewController: UICollectionViewDataSource {
@@ -145,6 +162,16 @@ extension NewsViewController: UICollectionViewDataSource {
             present(articleViewController, animated: true, completion: nil)
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionFooter {
+            let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LoadMoreFooterView.reuseIdentifier, for: indexPath) as! LoadMoreFooterView
+            footerView.delegate = self
+            return footerView
+        } else {
+            return UICollectionReusableView()
+        }
+    }
 }
 
 extension NewsViewController: UICollectionViewDelegateFlowLayout {
@@ -160,5 +187,7 @@ extension NewsViewController: UICollectionViewDelegateFlowLayout {
         return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 }
+
+
 
 
