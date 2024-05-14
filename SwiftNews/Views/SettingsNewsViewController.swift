@@ -7,7 +7,10 @@
 
 import UIKit
 
-class SavedNewsViewController: UIViewController {
+class SettingsViewController: UIViewController {
+    
+    // vc pra contrlar lingua/pais, e oq mais der
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }

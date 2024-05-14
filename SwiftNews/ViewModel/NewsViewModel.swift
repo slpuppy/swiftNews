@@ -9,8 +9,10 @@ import Foundation
 
 protocol NewsViewModelProtocol {
     var articles: [Article]? { get }
-    func getWorldwideNews(completion: @escaping (Result<[Article], Error>) -> Void)
-    func getNewsForLocation(completion: @escaping (Result<[Article], Error>) -> Void)
+    var selectedCategory: NewsCategory { get }
+    var categories: [NewsCategory] { get }
+    func getNews(completion: @escaping (Result<[Article], Error>) -> Void)
+    func selectCategory(category: NewsCategory)
 }
 
 class NewsViewModel: NewsViewModelProtocol {
@@ -19,7 +21,9 @@ class NewsViewModel: NewsViewModelProtocol {
     
     var articles: [Article]?
     
-    var category: String = "technology"
+    var categories: [NewsCategory] = [.business, .entertainment, .health, .science, .sports, .tech]
+    
+    var selectedCategory = NewsCategory.business
     
     var location: String = "us"
     
@@ -27,27 +31,15 @@ class NewsViewModel: NewsViewModelProtocol {
         self.networkingService = networkingService
     }
     
-    func getWorldwideNews(completion: @escaping (Result<[Article], Error>) -> Void) {
+    func getNews(completion: @escaping (Result<[Article], Error>) -> Void) {
         Task {
             do {
-                let newsList = try await networkingService?.getTopHeadlinesByCategory(category: category)
-                guard let articles = newsList?.articles else { return }
-                self.articles = articles
-                completion(.success(articles))
-            } catch {
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func getNewsForLocation(completion: @escaping (Result<[Article], Error>) -> Void) {
-        Task {
-            do {
-                let newsList = try await networkingService?.getTopHeadlinesByCategoryForLocation(category: category, location: location)
+                let newsList = try await networkingService?.getTopHeadlinesByCategoryForLocation(category: selectedCategory.rawValue, location: location)
                 guard let articles = newsList?.articles else { return }
                 self.articles = articles
                 filterImagelessArticles()
                 filterDescriptionlessArticles()
+                formatNewsTitle()
                 completion(.success(articles))
             } catch {
                 completion(.failure(error))
@@ -62,6 +54,24 @@ class NewsViewModel: NewsViewModelProtocol {
     private func filterDescriptionlessArticles() {
         articles = articles?.filter { $0.description != nil }
     }
+    
+    private func formatNewsTitle() {
+        articles = articles?.map { article in
+            var components = article.title.components(separatedBy: " - ")
+            if components.count > 1 {
+                components.removeLast()
+            }
+            let formattedTitle = components.joined(separator: ": ")
+            var formattedArticle = article
+            formattedArticle.title = formattedTitle
+            return formattedArticle
+        }
+    }
+    
+    func selectCategory(category: NewsCategory) {
+        self.selectedCategory = category
+    }
+
     
     
 }
