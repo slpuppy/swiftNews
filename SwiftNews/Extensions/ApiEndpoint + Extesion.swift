@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Default values
 
-extension ApiEndpoint {
+extension ApiEndpointProtocol {
     var domain: String { "newsapi.org" }
     var pathPrefix: String { "v2/" }
     var body: Data? { nil }
@@ -20,7 +20,7 @@ extension ApiEndpoint {
 
 // MARK: - URL building
 
-extension ApiEndpoint {
+extension ApiEndpointProtocol {
     
     private var url: URL {
         var components = URLComponents()
@@ -29,10 +29,10 @@ extension ApiEndpoint {
         
         
         if let query = query {
-            components.queryItems = query.map { URLQueryItem(name: $0.key, value: $0.value)
-            }
+            components.queryItems = query.map { URLQueryItem(name: $0.key, value: $0.value)}
             components.queryItems?.append(URLQueryItem(name: "apiKey", value: apiKey))
         }
+        
         guard let url = components.url?
             .appendingPathComponent(pathPrefix)
             .appendingPathComponent(path)
@@ -42,7 +42,6 @@ extension ApiEndpoint {
         print(url)
         return url
     }
-    
     
     var request: URLRequest {
         var request = URLRequest(url: url)

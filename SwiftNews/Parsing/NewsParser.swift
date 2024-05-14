@@ -11,5 +11,4 @@ class NewsParser: NewsParserProtocol {
     func parseNewsData(data: Data) throws -> ArticleListResponse  {
         return try JSONDecoder().decode(ArticleListResponse.self, from: data)
     }
-    
 }

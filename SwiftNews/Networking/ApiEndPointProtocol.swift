@@ -1,18 +1,13 @@
 //
-//  ApiEndPoint.swift
+//  ApiEndPointProtocol.swift
 //  SwiftNews
 //
-//  Created by Gabriel Puppi on 13/05/24.
+//  Created by Gabriel Puppi on 14/05/24.
 //
 
 import Foundation
 
-enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-}
-
-protocol ApiEndpoint {
+protocol ApiEndpointProtocol {
     var domain: String { get }
     var pathPrefix: String { get }
     var path: String { get }
@@ -20,5 +15,3 @@ protocol ApiEndpoint {
     var method: HTTPMethod { get }
     var query: [String: String]? { get }
 }
-
-

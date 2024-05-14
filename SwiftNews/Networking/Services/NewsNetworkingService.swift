@@ -7,10 +7,6 @@
 
 import Foundation
 
-protocol NewsNetworkingServiceProtocol {
-    func getTopHeadlinesByCategoryForLocation(category: String, location: String, pageSize: Int, page: Int) async throws -> ArticleListResponse
-}
-
 class NewsNetworkingService: NewsNetworkingServiceProtocol {
     
     let parser: NewsParserProtocol

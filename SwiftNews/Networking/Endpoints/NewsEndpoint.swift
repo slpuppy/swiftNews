@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NewsEndpoint: ApiEndpoint {
+enum NewsEndpoint: ApiEndpointProtocol {
     
     case everything(String)
     case topHeadlinesByCountry(String, String, Int, Int)

@@ -11,7 +11,7 @@ extension UIColor {
     convenience init?(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-
+        
         var rgb: UInt64 = 0
 
         guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else {
