@@ -20,8 +20,8 @@ class NewsNetworkingService: NewsNetworkingServiceProtocol {
         session = URLSession(configuration: configuration)
     }
     
-    func getTopHeadlinesByCategoryForLocation(category: String, location: String, pageSize: Int, page: Int) async throws -> ArticleListResponse {
-           let endpoint = NewsEndpoint.topHeadlinesByCountry(category, location, pageSize, page)
+    func getTopHeadlinesByCategory(category: String, pageSize: Int, page: Int) async throws -> ArticleListResponse {
+           let endpoint = NewsEndpoint.topHeadlinesByCountry(category, pageSize, page)
            let (data, _) = try await session.data(for: endpoint.request)
            return try parser.parseNewsData(data: data)
        }

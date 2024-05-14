@@ -13,13 +13,15 @@ class CategoryCell: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.layer.cornerRadius = 18
+        contentView.layer.cornerCurve = .continuous
         setupSubviews()
         setupConstraints()
     }
@@ -43,11 +45,9 @@ class CategoryCell: UICollectionViewCell {
     func configureAppearance(selected: Bool) {
         if selected {
             contentView.backgroundColor = .white
-            contentView.layer.cornerRadius = 8
             titleLabel.textColor = UIColor(hex: "2C2C2C")
         } else {
             contentView.backgroundColor = UIColor(hex: "2C2C2C")
-            contentView.layer.cornerRadius = 8
             titleLabel.textColor = .white
         }
        

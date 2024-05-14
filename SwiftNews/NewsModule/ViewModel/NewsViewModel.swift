@@ -29,8 +29,6 @@ class NewsViewModel: NewsViewModelProtocol {
     private var currentPage: Int = 1
     private var pageSize: Int = 20
     
-    var location: String = "us"
-    
     init(networkingService: NewsNetworkingServiceProtocol = NewsNetworkingService()) {
         self.networkingService = networkingService
     }
@@ -38,11 +36,12 @@ class NewsViewModel: NewsViewModelProtocol {
     func getNews(completion: @escaping (Result<[Article], Error>) -> Void) {
         Task {
             do {
-                let newsList = try await networkingService?.getTopHeadlinesByCategoryForLocation(category: selectedCategory.rawValue, location: location, pageSize: 20, page: currentPage)
+                let newsList = try await networkingService?.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: 20, page: currentPage)
                 guard let articles = newsList?.articles else { return }
                 self.articles = articles
+                print(articles)
                 filterImagelessArticles()
-                filterDescriptionlessArticles()
+              //  filterDescriptionlessArticles()
                 formatNewsTitle()
                 completion(.success(articles))
             } catch {
@@ -55,16 +54,12 @@ class NewsViewModel: NewsViewModelProtocol {
            Task {
                do {
                    currentPage += 1
-                   let newsList = try await networkingService?.getTopHeadlinesByCategoryForLocation(category: selectedCategory.rawValue, location: location, pageSize: pageSize, page: currentPage)
+                   let newsList = try await networkingService?.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
                    guard let newArticles = newsList?.articles else { return }
-                   
-        
                    self.articles?.append(contentsOf: newArticles)
-                   
                    filterImagelessArticles()
                    filterDescriptionlessArticles()
                    formatNewsTitle()
-                   
                    completion(.success(newArticles))
                } catch {
                    currentPage -= 1 
@@ -73,7 +68,6 @@ class NewsViewModel: NewsViewModelProtocol {
            }
        }
    
-    
     private func filterImagelessArticles(){
         articles = articles?.filter { $0.urlToImage != nil }
     }

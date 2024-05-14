@@ -10,7 +10,7 @@ import Foundation
 enum NewsEndpoint: ApiEndpointProtocol {
     
     case everything(String)
-    case topHeadlinesByCountry(String, String, Int, Int)
+    case topHeadlinesByCountry(String, Int, Int)
     
     var path: String {
         switch self {
@@ -25,8 +25,8 @@ enum NewsEndpoint: ApiEndpointProtocol {
         switch self {
         case let .everything(everything):
             return ["everything": everything]
-        case let .topHeadlinesByCountry(category, country, pageSize, page):
-            return ["category": category, "country" : country, "pageSize" : "\(pageSize)", "page" : "\(page)"]
+        case let .topHeadlinesByCountry(category, pageSize, page):
+            return ["category": category, "pageSize" : "\(pageSize)", "page" : "\(page)", "country" : "us"]
         }
     }
     

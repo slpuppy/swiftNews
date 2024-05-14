@@ -8,5 +8,5 @@
 import Foundation
 
 protocol NewsNetworkingServiceProtocol {
-    func getTopHeadlinesByCategoryForLocation(category: String, location: String, pageSize: Int, page: Int) async throws -> ArticleListResponse
+    func getTopHeadlinesByCategory(category: String, pageSize: Int, page: Int) async throws -> ArticleListResponse
 }
