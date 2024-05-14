@@ -86,6 +86,32 @@ class ArticleViewController: UIViewController {
         return label
     }()
     
+    private lazy var readButton: UIButton = {
+        var config = UIButton.Configuration.filled()
+        config.imagePlacement = .leading
+        config.imagePadding = 8
+        config.baseBackgroundColor = UIColor(hex: "212121")
+        config.baseForegroundColor = UIColor.white
+        config.cornerStyle = .capsule
+        config.imagePlacement = .trailing
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+            return outgoing
+        }
+        let image = UIImage(systemName: "arrow.right")
+               config.image = image
+               config.contentInsets = .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+        let button = UIButton(configuration: config)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        button.setTitle("Read full article", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 11)
+        button.isUserInteractionEnabled = false
+        return button
+    }()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()

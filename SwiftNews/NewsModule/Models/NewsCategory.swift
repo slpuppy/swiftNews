@@ -8,6 +8,7 @@
 import Foundation
 
 enum NewsCategory: String {
+    case all = ""
     case tech =  "technology"
     case business = "business"
     case health = "health"

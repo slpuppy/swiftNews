@@ -19,12 +19,9 @@ protocol NewsViewModelProtocol {
 class NewsViewModel: NewsViewModelProtocol {
     
     let networkingService: NewsNetworkingServiceProtocol?
-    
     var articles: [Article]?
-    
     var categories: [NewsCategory] = [.business, .entertainment, .health, .science, .sports, .tech]
-    
-    var selectedCategory = NewsCategory.business
+    var selectedCategory: NewsCategory = .all
     
     private var currentPage: Int = 1
     private var pageSize: Int = 20
@@ -67,7 +64,12 @@ class NewsViewModel: NewsViewModelProtocol {
                }
            }
        }
+    
+    func selectCategory(category: NewsCategory) {
+        self.selectedCategory = category
+    }
    
+    
     private func filterImagelessArticles(){
         articles = articles?.filter { $0.urlToImage != nil }
     }
@@ -88,11 +90,4 @@ class NewsViewModel: NewsViewModelProtocol {
             return formattedArticle
         }
     }
-    
-    func selectCategory(category: NewsCategory) {
-        self.selectedCategory = category
-    }
-
-    
-    
 }
