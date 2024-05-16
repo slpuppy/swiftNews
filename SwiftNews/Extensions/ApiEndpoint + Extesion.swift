@@ -15,7 +15,7 @@ extension ApiEndpointProtocol {
     var body: Data? { nil }
     var method: HTTPMethod { .get }
     var query: [String: String]? { nil }
-    var apiKey: String { "ab87d356e75d473790640bcb283f170b" }
+    var apiKey: String { ProcessInfo.processInfo.environment["apiKey"] ?? "" }
 }
 
 // MARK: - URL building
@@ -26,7 +26,6 @@ extension ApiEndpointProtocol {
         var components = URLComponents()
         components.scheme = "https"
         components.host = domain
-        
         
         if let query = query {
             components.queryItems = query.map { URLQueryItem(name: $0.key, value: $0.value)}
