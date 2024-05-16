@@ -67,7 +67,7 @@ class NewsViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -89,7 +89,7 @@ class NewsViewController: UIViewController {
     }
     
     private func fetchNews(){
-        viewModel.getNews() { [weak self] result in
+        viewModel.loadMoreNews { [weak self] result in
             switch result {
             case .success(_):
                 DispatchQueue.main.async {
@@ -99,6 +99,7 @@ class NewsViewController: UIViewController {
                 print("Failed to fetch")
             }
         }
+
     }
 }
 
@@ -107,10 +108,11 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
     func didTapCategory(category: NewsCategory) {
         if category != viewModel.selectedCategory {
             viewModel.selectCategory(category: category)
-            viewModel.getNews { [weak self] result in
+            viewModel.loadMoreNews { [weak self] result in
                 switch result {
                 case .success(_):
                     DispatchQueue.main.async {
+                        self?.scrollToTop()
                         self?.headerView.updateSelectedCategory(selectedCategory: category)
                         self?.collectionView.reloadData()
                     }
@@ -140,26 +142,23 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
 extension NewsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.articles?.count ?? 0
+        return viewModel.articles.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArticleNewsCell", for: indexPath) as? ArticleCell else {
             return UICollectionViewCell()
         }
-        if let article = viewModel.articles?[indexPath.item] {
+        let article = viewModel.articles[indexPath.item]
             cell.configure(with: article)
             cell.layer.cornerRadius = 10
             return cell
-        } else {
-            return cell
-        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let article = viewModel.articles?[indexPath.row] {
+            let article = viewModel.articles[indexPath.row]
             viewModel.presentArticle(article: article)
-        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -186,6 +185,14 @@ extension NewsViewController: UICollectionViewDelegateFlowLayout {
         return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 }
+
+extension NewsViewController {
+    func scrollToTop() {
+        let indexPath = IndexPath(item: 0, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+    }
+}
+
 
 
 

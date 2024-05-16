@@ -88,7 +88,9 @@ class NewsCollectionViewHeader: UIView {
     
     func updateSelectedCategory(selectedCategory: NewsCategory) {
         self.selectedCategory = selectedCategory
-        self.categoriesCollectionView.reloadData()
+        self.categoriesCollectionView.performBatchUpdates {
+            self.categoriesCollectionView.reloadSections([0])
+        }
     }
 } 
 
