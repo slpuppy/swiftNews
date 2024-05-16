@@ -8,13 +8,16 @@
 import UIKit
 
 class ArticleViewController: UIViewController {
+    
+    private var article: Article
 
     init(article: Article) {
+        self.article = article
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = UIColor(hex: "171717")
         self.setupSubviews()
         self.setupConstraints()
-        self.setupContent(article: article)
+        self.setupContent()
         self.navigationController?.isNavigationBarHidden = false
     }
     
@@ -44,7 +47,7 @@ class ArticleViewController: UIViewController {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -53,8 +56,9 @@ class ArticleViewController: UIViewController {
     
     private lazy var authorLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 12)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textColor = .white
+        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -67,7 +71,6 @@ class ArticleViewController: UIViewController {
         return label
     }()
     
-    
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
@@ -79,7 +82,7 @@ class ArticleViewController: UIViewController {
     
     private lazy var contentLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -99,19 +102,22 @@ class ArticleViewController: UIViewController {
             outgoing.font = UIFont.systemFont(ofSize: 12, weight: .medium)
             return outgoing
         }
-        let image = UIImage(systemName: "arrow.right")
+        let image = UIImage(systemName: "arrow.up.right")
                config.image = image
-               config.contentInsets = .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+               config.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
         let button = UIButton(configuration: config)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         button.setTitle("Read full article", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 11)
-        button.isUserInteractionEnabled = false
+        button.layer.cornerRadius = 25
+        button.layer.borderColor = UIColor.white.cgColor
+        button.layer.borderWidth = 1.0
+        let action = UIAction { [weak self] _ in
+            self?.openArticleURL()
+        }
+        button.addAction(action, for: .touchUpInside)
         return button
     }()
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,8 +129,8 @@ class ArticleViewController: UIViewController {
         self.view.addSubview(titleLabel)
         self.view.addSubview(publishDateLabel)
         self.view.addSubview(authorLabel)
-        self.view.addSubview(publishDateLabel)
         self.view.addSubview(contentLabel)
+        self.view.addSubview(readButton)
     }
     
     private func setupConstraints() {
@@ -144,9 +150,13 @@ class ArticleViewController: UIViewController {
             closeButton.heightAnchor.constraint(equalToConstant: 36),
         ])
         
-        
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
+            publishDateLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
+            publishDateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
+        ])
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: publishDateLabel.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
@@ -154,30 +164,34 @@ class ArticleViewController: UIViewController {
         NSLayoutConstraint.activate([
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             authorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            authorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor)
         ])
-        
-        NSLayoutConstraint.activate([
-            publishDateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            publishDateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-        ])
-        
+            
         NSLayoutConstraint.activate([
             contentLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 16),
             contentLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             contentLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+        
+        NSLayoutConstraint.activate([
+            readButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
+            readButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+        ])
+        
     }
     
-    private func setupContent(article: Article) {
+    private func setupContent() {
         if let urlToImage = article.urlToImage,
            let url = URL(string: urlToImage){
             imageView.downloaded(from: url)
         }
-        
         self.titleLabel.text = article.title
-        self.authorLabel.text = article.author
         self.contentLabel.text = article.content
-        
+        if let author = article.author {
+            authorLabel.text = "\(author) at \(article.source.name)"
+        } else {
+            authorLabel.text = article.source.name
+        }
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
         
@@ -186,6 +200,13 @@ class ArticleViewController: UIViewController {
             formatter.dateFormat = "MMM dd, yyyy' - 'HH:mm"
             publishDateLabel.text = formatter.string(from: date)
         }
+    }
+    
+    private func openArticleURL(){
+        if let url = URL(string: article.url) {
+            UIApplication.shared.open(url)
+        }
+
     }
     
     private func close(){

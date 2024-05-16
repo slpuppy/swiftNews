@@ -54,8 +54,8 @@ class NewsViewModel: NewsViewModelProtocol {
                    let newsList = try await networkingService?.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
                    guard let newArticles = newsList?.articles else { return }
                    self.articles?.append(contentsOf: newArticles)
+                   filterContentlessArticles()
                    filterImagelessArticles()
-                   filterDescriptionlessArticles()
                    formatNewsTitle()
                    completion(.success(newArticles))
                } catch {
@@ -69,13 +69,16 @@ class NewsViewModel: NewsViewModelProtocol {
         self.selectedCategory = category
     }
    
-    
     private func filterImagelessArticles(){
         articles = articles?.filter { $0.urlToImage != nil }
     }
     
     private func filterDescriptionlessArticles() {
         articles = articles?.filter { $0.description != nil }
+    }
+    
+    private func filterContentlessArticles() {
+        articles = articles?.filter { $0.content != nil }
     }
     
     private func formatNewsTitle() {

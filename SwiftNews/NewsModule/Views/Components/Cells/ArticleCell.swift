@@ -71,7 +71,7 @@ class ArticleCell: UICollectionViewCell {
         config.imagePlacement = .trailing
         config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
             var outgoing = incoming
-            outgoing.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+            outgoing.font = UIFont.systemFont(ofSize: 13, weight: .medium)
             return outgoing
         }
         let image = UIImage(systemName: "arrow.right")
