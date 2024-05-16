@@ -14,10 +14,12 @@ protocol NewsViewModelProtocol {
     func getNews(completion: @escaping (Result<[Article], Error>) -> Void)
     func loadMoreNews(completion: @escaping (Result<[Article], Error>) -> Void)
     func selectCategory(category: NewsCategory)
+    func presentArticle(article: Article)
 }
 
 class NewsViewModel: NewsViewModelProtocol {
     
+    weak var coordinator: MainCoordinator?
     let networkingService: NewsNetworkingServiceProtocol?
     var articles: [Article]?
     var categories: [NewsCategory] = [.business, .entertainment, .health, .science, .sports, .tech]
@@ -25,6 +27,8 @@ class NewsViewModel: NewsViewModelProtocol {
     
     private var currentPage: Int = 1
     private var pageSize: Int = 20
+    
+
     
     init(networkingService: NewsNetworkingServiceProtocol = NewsNetworkingService()) {
         self.networkingService = networkingService
@@ -38,7 +42,6 @@ class NewsViewModel: NewsViewModelProtocol {
                 self.articles = articles
                 print(articles)
                 filterImagelessArticles()
-              //  filterDescriptionlessArticles()
                 formatNewsTitle()
                 completion(.success(articles))
             } catch {
@@ -67,6 +70,10 @@ class NewsViewModel: NewsViewModelProtocol {
     
     func selectCategory(category: NewsCategory) {
         self.selectedCategory = category
+    }
+    
+    func presentArticle(article: Article){
+        coordinator?.presentArticle(article: article)
     }
    
     private func filterImagelessArticles(){

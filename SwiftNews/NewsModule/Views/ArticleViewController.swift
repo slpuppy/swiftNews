@@ -10,6 +10,8 @@ import UIKit
 class ArticleViewController: UIViewController {
     
     private var article: Article
+    
+    weak var coordinator: MainCoordinator?
 
     init(article: Article) {
         self.article = article
@@ -18,7 +20,6 @@ class ArticleViewController: UIViewController {
         self.setupSubviews()
         self.setupConstraints()
         self.setupContent()
-        self.navigationController?.isNavigationBarHidden = false
     }
     
     required init?(coder: NSCoder) {
@@ -206,8 +207,7 @@ class ArticleViewController: UIViewController {
         if let url = URL(string: article.url) {
             UIApplication.shared.open(url)
         }
-
-    }
+}
     
     private func close(){
         self.dismiss(animated: true)

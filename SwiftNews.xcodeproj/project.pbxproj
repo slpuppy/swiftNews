@@ -21,7 +21,6 @@
 		751ECBAE2BF254B6007E78AD /* NewsNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBAD2BF254B6007E78AD /* NewsNetworkingService.swift */; };
 		751ECBB12BF25605007E78AD /* ArticleListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBB02BF25605007E78AD /* ArticleListResponse.swift */; };
 		751ECBB32BF2561D007E78AD /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBB22BF2561D007E78AD /* Article.swift */; };
-		751ECBBC2BF25E71007E78AD /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBBB2BF25E71007E78AD /* CustomTabBarController.swift */; };
 		751ECBBE2BF26732007E78AD /* ArticleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBBD2BF26732007E78AD /* ArticleCell.swift */; };
 		751ECBC02BF26842007E78AD /* NewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBBF2BF26842007E78AD /* NewsViewModel.swift */; };
 		751ECBC22BF279C3007E78AD /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBC12BF279C2007E78AD /* ArticleViewController.swift */; };
@@ -37,6 +36,8 @@
 		751ECBDC2BF40785007E78AD /* NewsNetworkingServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBDB2BF40785007E78AD /* NewsNetworkingServiceProtocol.swift */; };
 		751ECBDE2BF407B4007E78AD /* ApiEndPointProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBDD2BF407B4007E78AD /* ApiEndPointProtocol.swift */; };
 		751ECBE42BF408C4007E78AD /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBE32BF408C4007E78AD /* NewsViewController.swift */; };
+		751ECBF22BF64E15007E78AD /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBF12BF64E14007E78AD /* Coordinator.swift */; };
+		751ECBF42BF64EB9007E78AD /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBF32BF64EB9007E78AD /* MainCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,7 +76,6 @@
 		751ECBAD2BF254B6007E78AD /* NewsNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsNetworkingService.swift; sourceTree = "<group>"; };
 		751ECBB02BF25605007E78AD /* ArticleListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListResponse.swift; sourceTree = "<group>"; };
 		751ECBB22BF2561D007E78AD /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
-		751ECBBB2BF25E71007E78AD /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		751ECBBD2BF26732007E78AD /* ArticleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCell.swift; sourceTree = "<group>"; };
 		751ECBBF2BF26842007E78AD /* NewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModel.swift; sourceTree = "<group>"; };
 		751ECBC12BF279C2007E78AD /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +91,8 @@
 		751ECBDB2BF40785007E78AD /* NewsNetworkingServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsNetworkingServiceProtocol.swift; sourceTree = "<group>"; };
 		751ECBDD2BF407B4007E78AD /* ApiEndPointProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiEndPointProtocol.swift; sourceTree = "<group>"; };
 		751ECBE32BF408C4007E78AD /* NewsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewsViewController.swift; path = SwiftNews/NewsModule/Views/NewsViewController.swift; sourceTree = SOURCE_ROOT; };
+		751ECBF12BF64E14007E78AD /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		751ECBF32BF64EB9007E78AD /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 				751ECBC52BF27E7F007E78AD /* Extensions */,
 				751ECB9C2BF24B77007E78AD /* Networking */,
 				751ECBE02BF4083A007E78AD /* Parsing */,
+				751ECBF02BF64E05007E78AD /* Coordinator */,
 				751ECBE22BF4088E007E78AD /* NewsModule */,
 				751ECB752BF24A10007E78AD /* Assets.xcassets */,
 				751ECB772BF24A10007E78AD /* LaunchScreen.storyboard */,
@@ -208,7 +211,6 @@
 				751ECBE32BF408C4007E78AD /* NewsViewController.swift */,
 				751ECBC12BF279C2007E78AD /* ArticleViewController.swift */,
 				751ECB702BF24A0E007E78AD /* SettingsNewsViewController.swift */,
-				751ECBBB2BF25E71007E78AD /* CustomTabBarController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -276,6 +278,15 @@
 				751ECBB52BF25856007E78AD /* Views */,
 			);
 			path = NewsModule;
+			sourceTree = "<group>";
+		};
+		751ECBF02BF64E05007E78AD /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				751ECBF12BF64E14007E78AD /* Coordinator.swift */,
+				751ECBF32BF64EB9007E78AD /* MainCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -413,7 +424,6 @@
 				751ECB6D2BF24A0E007E78AD /* AppDelegate.swift in Sources */,
 				751ECBE42BF408C4007E78AD /* NewsViewController.swift in Sources */,
 				751ECBCF2BF2A818007E78AD /* NewsParser.swift in Sources */,
-				751ECBBC2BF25E71007E78AD /* CustomTabBarController.swift in Sources */,
 				751ECBB32BF2561D007E78AD /* Article.swift in Sources */,
 				751ECBD32BF3B4D1007E78AD /* NewsCategory.swift in Sources */,
 				751ECBBE2BF26732007E78AD /* ArticleCell.swift in Sources */,
@@ -430,6 +440,8 @@
 				751ECBD82BF3FDE7007E78AD /* NewsParserProtocol.swift in Sources */,
 				751ECBA02BF24F10007E78AD /* NewsEndpoint.swift in Sources */,
 				751ECB9E2BF24EF7007E78AD /* HTTPMethod.swift in Sources */,
+				751ECBF22BF64E15007E78AD /* Coordinator.swift in Sources */,
+				751ECBF42BF64EB9007E78AD /* MainCoordinator.swift in Sources */,
 				751ECBC42BF27E79007E78AD /* UIImageView + Extension.swift in Sources */,
 				751ECBD62BF3D41F007E78AD /* CategoryCell.swift in Sources */,
 			);

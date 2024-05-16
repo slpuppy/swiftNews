@@ -40,6 +40,7 @@ class NewsViewController: UIViewController {
     private var newsList: [Article] = []
     
     override func viewDidLoad() {
+        self.navigationController?.isNavigationBarHidden = true
         super.viewDidLoad()
         setupSubviews()
         setupConstraints()
@@ -157,8 +158,7 @@ extension NewsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let article = viewModel.articles?[indexPath.row] {
-            let articleViewController = ArticleViewController(article: article)
-            present(articleViewController, animated: true, completion: nil)
+            viewModel.presentArticle(article: article)
         }
     }
     
