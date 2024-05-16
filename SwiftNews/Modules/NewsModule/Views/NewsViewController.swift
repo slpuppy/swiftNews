@@ -89,17 +89,19 @@ class NewsViewController: UIViewController {
     }
     
     private func fetchNews(){
-        viewModel.loadMoreNews { [weak self] result in
-            switch result {
-            case .success(_):
-                DispatchQueue.main.async {
-                    self?.collectionView.reloadData()
+        Task {
+            do {
+                let result = await viewModel.loadMoreNews()
+                switch result {
+                case .success:
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
+                case .failure(let error):
+                    print("Failed to fetch: \(error)")
                 }
-            case .failure(_):
-                print("Failed to fetch")
             }
         }
-
     }
 }
 
@@ -108,32 +110,41 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
     func didTapCategory(category: NewsCategory) {
         if category != viewModel.selectedCategory {
             viewModel.selectCategory(category: category)
-            viewModel.loadMoreNews { [weak self] result in
-                switch result {
-                case .success(_):
-                    DispatchQueue.main.async {
-                        self?.scrollToTop()
-                        self?.headerView.updateSelectedCategory(selectedCategory: category)
-                        self?.collectionView.reloadData()
+            Task {
+                do {
+                    let result = await viewModel.loadMoreNews()
+                    switch result {
+                    case .success:
+                        DispatchQueue.main.async {
+                            self.scrollToTopIfNeeded()
+                            self.headerView.updateSelectedCategory(selectedCategory: category)
+                            self.collectionView.reloadData()
+                        }
+                    case .failure(let error):
+                        print("Failed to fetch: \(error)")
                     }
-                case .failure(_):
-                    print("Failed to fetch")
                 }
             }
+
+             
+          
         } else {
             return
         }
     }
     
     func didTapLoadMore() {
-        viewModel.loadMoreNews { [weak self] result in
-            switch result {
-            case .success(_):
-                DispatchQueue.main.async {
-                    self?.collectionView.reloadData()
+        Task {
+            do {
+                let result = await viewModel.loadMoreNews()
+                switch result {
+                case .success:
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
+                case .failure(let error):
+                    print("Failed to fetch: \(error)")
                 }
-            case .failure(_):
-                print("Failed to fetch")
             }
         }
     }
@@ -187,11 +198,26 @@ extension NewsViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension NewsViewController {
+    
     func scrollToTop() {
         let indexPath = IndexPath(item: 0, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
     }
+    
+    func shouldScrollToTop() -> Bool {
+        let yOffsetThreshold: CGFloat = 16
+        return collectionView.contentOffset.y > yOffsetThreshold
+    }
+    
+    func scrollToTopIfNeeded() {
+        if shouldScrollToTop() {
+            scrollToTop()
+        }
+    }
 }
+
+
+
 
 
 

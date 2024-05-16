@@ -11,7 +11,7 @@ protocol NewsViewModelProtocol {
     var articles: [Article] { get }
     var selectedCategory: NewsCategory { get }
     var categories: [NewsCategory] { get }
-    func loadMoreNews(completion: @escaping (Result<Void, Error>) -> Void)
+    func loadMoreNews() async -> Result<Void, Error>
     func selectCategory(category: NewsCategory)
     func presentArticle(article: Article)
 }
@@ -31,23 +31,21 @@ class NewsViewModel: NewsViewModelProtocol {
         self.networkingService = networkingService
     }
     
-    func loadMoreNews(completion: @escaping (Result<Void, Error>) -> Void) {
-           Task {
-               do {
-                   currentPage += 1
-                   let newsList = try await networkingService?.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
-                   guard let newArticles = newsList?.articles else { return }
-                   self.articles.append(contentsOf: newArticles)
-                   filterContentlessArticles()
-                   filterImagelessArticles()
-                   formatNewsTitle()
-                   completion(.success(()))
-               } catch {
-                   currentPage -= 1 
-                   completion(.failure(error))
-               }
-           }
-       }
+    func loadMoreNews() async -> Result<Void, Error> {
+        do {
+            currentPage += 1
+            let newsList = try await networkingService?.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
+            guard let newArticles = newsList?.articles else { return .success(()) }
+            self.articles.append(contentsOf: newArticles)
+            filterContentlessArticles()
+            filterImagelessArticles()
+            formatNewsTitle()
+            return .success(())
+        } catch {
+            currentPage -= 1
+            return .failure(error)
+        }
+    }
     
     func selectCategory(category: NewsCategory) {
         self.currentPage = 0
