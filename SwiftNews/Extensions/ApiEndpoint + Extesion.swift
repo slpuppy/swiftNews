@@ -15,7 +15,7 @@ extension ApiEndpointProtocol {
     var body: Data? { nil }
     var method: HTTPMethod { .get }
     var query: [String: String]? { nil }
-    var apiKey: String { "b971aaf9306041d59de71eb31bd62054" }
+    var apiKey: String { "ab87d356e75d473790640bcb283f170b" }
 }
 
 // MARK: - URL building

@@ -11,8 +11,8 @@ protocol NewsViewModelProtocol {
     var articles: [Article]? { get }
     var selectedCategory: NewsCategory { get }
     var categories: [NewsCategory] { get }
-    func getNews(completion: @escaping (Result<[Article], Error>) -> Void)
-    func loadMoreNews(completion: @escaping (Result<[Article], Error>) -> Void)
+    func getNews(completion: @escaping (Result<Void, Error>) -> Void)
+    func loadMoreNews(completion: @escaping (Result<Void, Error>) -> Void)
     func selectCategory(category: NewsCategory)
     func presentArticle(article: Article)
 }
@@ -28,29 +28,26 @@ class NewsViewModel: NewsViewModelProtocol {
     private var currentPage: Int = 1
     private var pageSize: Int = 20
     
-
-    
     init(networkingService: NewsNetworkingServiceProtocol = NewsNetworkingService()) {
         self.networkingService = networkingService
     }
     
-    func getNews(completion: @escaping (Result<[Article], Error>) -> Void) {
+    func getNews(completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
                 let newsList = try await networkingService?.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: 20, page: currentPage)
                 guard let articles = newsList?.articles else { return }
                 self.articles = articles
-                print(articles)
                 filterImagelessArticles()
                 formatNewsTitle()
-                completion(.success(articles))
+                completion(.success(()))
             } catch {
                 completion(.failure(error))
             }
         }
     }
     
-    func loadMoreNews(completion: @escaping (Result<[Article], Error>) -> Void) {
+    func loadMoreNews(completion: @escaping (Result<Void, Error>) -> Void) {
            Task {
                do {
                    currentPage += 1
@@ -60,7 +57,7 @@ class NewsViewModel: NewsViewModelProtocol {
                    filterContentlessArticles()
                    filterImagelessArticles()
                    formatNewsTitle()
-                   completion(.success(newArticles))
+                   completion(.success(()))
                } catch {
                    currentPage -= 1 
                    completion(.failure(error))
