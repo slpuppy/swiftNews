@@ -20,7 +20,7 @@ final class NewsNetworkingServiceTests: XCTestCase {
         sut = nil
     }
 
-    func test_getTopHeadlinesByCategoryForLocation_shouldReturn20ArticleList() async throws {
+    func test_getTopHeadlinesByCategory_shouldReturn20ArticleList() async throws {
         let uut = try await sut.getTopHeadlinesByCategory(category: NewsCategory.entertainment.rawValue, pageSize: 20, page: 1)
         
         XCTAssertEqual("ok", uut.status)

@@ -145,14 +145,13 @@
 			children = (
 				751ECB6C2BF24A0E007E78AD /* AppDelegate.swift */,
 				751ECB6E2BF24A0E007E78AD /* SceneDelegate.swift */,
+				751ECB752BF24A10007E78AD /* Assets.xcassets */,
+				751ECB7A2BF24A10007E78AD /* Info.plist */,
+				751ECB772BF24A10007E78AD /* LaunchScreen.storyboard */,
+				751ECBF02BF64E05007E78AD /* Coordinator */,
 				751ECBC52BF27E7F007E78AD /* Extensions */,
 				751ECB9C2BF24B77007E78AD /* Networking */,
-				751ECBE02BF4083A007E78AD /* Parsing */,
-				751ECBF02BF64E05007E78AD /* Coordinator */,
-				751ECBE22BF4088E007E78AD /* NewsModule */,
-				751ECB752BF24A10007E78AD /* Assets.xcassets */,
-				751ECB772BF24A10007E78AD /* LaunchScreen.storyboard */,
-				751ECB7A2BF24A10007E78AD /* Info.plist */,
+				751ECBF52BF65B41007E78AD /* Modules */,
 			);
 			path = SwiftNews;
 			sourceTree = "<group>";
@@ -180,8 +179,9 @@
 			children = (
 				751ECB9D2BF24EF7007E78AD /* HTTPMethod.swift */,
 				751ECBDD2BF407B4007E78AD /* ApiEndPointProtocol.swift */,
-				751ECBE12BF40859007E78AD /* Services */,
 				751ECBB62BF25C9A007E78AD /* Endpoints */,
+				751ECBE12BF40859007E78AD /* Services */,
+				751ECBE02BF4083A007E78AD /* Parsing */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -287,6 +287,14 @@
 				751ECBF32BF64EB9007E78AD /* MainCoordinator.swift */,
 			);
 			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		751ECBF52BF65B41007E78AD /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				751ECBE22BF4088E007E78AD /* NewsModule */,
+			);
+			path = Modules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

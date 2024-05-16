@@ -34,6 +34,14 @@ class ArticleViewController: UIViewController {
        return imageView
     }()
     
+    private lazy var imageOverlayView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.opacity = 0.25
+        return view
+    }()
+    
     private lazy var closeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
@@ -126,6 +134,7 @@ class ArticleViewController: UIViewController {
     
     private func setupSubviews() {
         self.view.addSubview(imageView)
+        imageView.addSubview(imageOverlayView)
         self.view.addSubview(closeButton)
         self.view.addSubview(titleLabel)
         self.view.addSubview(publishDateLabel)
@@ -140,8 +149,12 @@ class ArticleViewController: UIViewController {
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),      imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 300)
+            imageView.heightAnchor.constraint(equalToConstant: 300),
             
+            imageOverlayView.topAnchor.constraint(equalTo: imageView.topAnchor),
+            imageOverlayView.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            imageOverlayView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            imageOverlayView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -169,7 +182,7 @@ class ArticleViewController: UIViewController {
         ])
             
         NSLayoutConstraint.activate([
-            contentLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 16),
+            contentLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 8),
             contentLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             contentLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
