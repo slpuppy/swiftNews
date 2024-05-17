@@ -121,14 +121,14 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
     func didTapCategory(category: NewsCategory) {
         if category != viewModel.selectedCategory {
             viewModel.selectCategory(category: category)
+            self.scrollToTopIfNeeded()
             Task {
                 let result = await viewModel.loadMoreNews()
                 switch result {
                 case .success:
                     DispatchQueue.main.async {
                        self.headerView.updateSelectedCategory(selectedCategory: category)
-                        self.collectionView.reloadData()
-                        self.scrollToTopIfNeeded()
+                       self.collectionView.reloadData()
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {
@@ -146,11 +146,13 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
     func didTapLoadMore() {
         self.fetchNews()
     }
+    
 }
 
 extension NewsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("number of Items")
         return viewModel.articles.count
     }
     
@@ -158,6 +160,7 @@ extension NewsViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArticleNewsCell", for: indexPath) as? ArticleCell else {
             return UICollectionViewCell()
         }
+        print("cell")
         let article = viewModel.articles[indexPath.item]
         cell.configure(with: article)
         cell.layer.cornerRadius = 10

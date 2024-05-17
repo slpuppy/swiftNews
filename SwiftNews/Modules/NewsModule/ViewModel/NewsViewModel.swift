@@ -20,7 +20,7 @@ class NewsViewModel: NewsViewModelProtocol {
     
     weak var coordinator: MainCoordinator?
     
-    let networkingService: NewsNetworkingServiceProtocol?
+    let networkingService: NewsNetworkingServiceProtocol
     
     var categories: [NewsCategory] = [.business, .entertainment, .health, .science, .sports, .tech]
     
@@ -41,7 +41,7 @@ class NewsViewModel: NewsViewModelProtocol {
     
     func loadMoreNews() async -> Result<Void, Error> {
             currentPage += 1
-        let result = await networkingService?.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
+        let result = await networkingService.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
             switch result {
             case .success(let newsList):
                 guard let newArticles = newsList.articles else {
@@ -57,9 +57,6 @@ class NewsViewModel: NewsViewModelProtocol {
             case .failure(let error):
                 currentPage -= 1
                 return .failure(error)
-            case .none:
-                currentPage -= 1
-                return .failure(APIErrorResponse(status: "999", code: "Unkwnown", message: "And unknonw server error ocurred"))
             }
     }
 
