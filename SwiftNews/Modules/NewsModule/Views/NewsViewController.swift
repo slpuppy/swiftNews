@@ -112,7 +112,7 @@ class NewsViewController: UIViewController {
             case .failure:
                 DispatchQueue.main.async {
                     self.refreshControl.endRefreshing()
-                    self.showAlert(title: "Network Error", message: "Request limit reached or missing data")
+                    self.showAlert(title: "Request limit reached", message: "Seems you've read too much news today")
                 }
             }
         }
