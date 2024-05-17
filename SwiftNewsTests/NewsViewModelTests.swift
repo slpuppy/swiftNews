@@ -13,7 +13,7 @@ final class NewsViewModelTests: XCTestCase {
     var viewModel: NewsViewModel!
 
     override func setUpWithError() throws {
-        self.viewModel = NewsViewModel(networkingService: NewsNetworkingServiceMock())
+        self.viewModel = NewsViewModel(networkingService: NewsNetworkingServiceMock(), coordinator: MainCoordinator(navigationController: UINavigationController()))
     }
 
     override func tearDownWithError() throws {
@@ -24,20 +24,16 @@ final class NewsViewModelTests: XCTestCase {
           
             XCTAssertEqual(viewModel.articles.count, 0, "Initial articles count should be zero")
          
-        let firstPageLoaded = expectation(description: "loaded page one")
         
         let result = await viewModel.loadNews()
           switch result {
           case .success:
               XCTAssertEqual(viewModel.articles.count, 20, "Articles count after loading first page should be 20")
-              firstPageLoaded.fulfill()
           case .failure(let error):
               XCTFail("Expected success, but got failure with error: \(error)")
           }
-        
-            await fulfillment(of: [firstPageLoaded])
-        
-          let resultSecondPage = await viewModel.loadNews()
+    
+        let resultSecondPage = await viewModel.loadNextPage()
           switch resultSecondPage {
           case .success:
               XCTAssertEqual(viewModel.articles.count, 40, "Articles count after loading second page should be 40")
