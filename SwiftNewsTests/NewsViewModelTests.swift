@@ -26,7 +26,7 @@ final class NewsViewModelTests: XCTestCase {
          
         let firstPageLoaded = expectation(description: "loaded page one")
         
-        let result = await viewModel.loadMoreNews()
+        let result = await viewModel.loadNews()
           switch result {
           case .success:
               XCTAssertEqual(viewModel.articles.count, 20, "Articles count after loading first page should be 20")
@@ -37,7 +37,7 @@ final class NewsViewModelTests: XCTestCase {
         
             await fulfillment(of: [firstPageLoaded])
         
-          let resultSecondPage = await viewModel.loadMoreNews()
+          let resultSecondPage = await viewModel.loadNews()
           switch resultSecondPage {
           case .success:
               XCTAssertEqual(viewModel.articles.count, 40, "Articles count after loading second page should be 40")

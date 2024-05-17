@@ -94,7 +94,7 @@ class NewsViewController: UIViewController {
     
     private func fetchNews() {
         Task {
-            let result = await self.viewModel.loadMoreNews()
+            let result = await self.viewModel.loadNews()
             switch result {
             case .success:
                 DispatchQueue.main.async {
@@ -108,7 +108,7 @@ class NewsViewController: UIViewController {
                         self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
                     }
                 }
-              
+                
             }
         }
     }
@@ -119,32 +119,44 @@ class NewsViewController: UIViewController {
 extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterViewDelegate {
     
     func didTapCategory(category: NewsCategory) {
-        if category != viewModel.selectedCategory {
-            viewModel.selectCategory(category: category)
-            self.scrollToTopIfNeeded()
-            Task {
-                let result = await viewModel.loadMoreNews()
-                switch result {
-                case .success:
-                    DispatchQueue.main.async {
-                       self.headerView.updateSelectedCategory(selectedCategory: category)
-                       self.collectionView.reloadData()
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                       if let newsError = error as? APIErrorResponse {
-                            self.showAlert(title: "Network Error", message: newsError.message ?? "Unknown error")
-                        } else {
-                            self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
-                        }
-                    }
+        scrollToTopIfNeeded()
+        Task {
+            let result = await viewModel.changeCategory(category: category)
+            switch result {
+            case .success:
+                await MainActor.run {
+                    self.headerView.updateSelectedCategory(selectedCategory: category)
+                    self.collectionView.reloadData()
                 }
+            case .failure(let error):
+                handleError(error: error)
+            case .none:
+                return
             }
         }
     }
     
     func didTapLoadMore() {
-        self.fetchNews()
+        Task {
+            let result = await viewModel.loadNextPage()
+            switch result {
+            case .success:
+                await MainActor.run {
+                    self.collectionView.reloadData()
+                }
+            case .failure(let error):
+                handleError(error: error)
+            }
+        }
+    }
+    
+    @MainActor
+    private func handleError(error: Error) {
+        if let newsError = error as? APIErrorResponse {
+            self.showAlert(title: "Network Error", message: newsError.message ?? "Unknown error")
+        } else {
+            self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
+        }
     }
     
 }

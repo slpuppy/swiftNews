@@ -16,8 +16,7 @@ class MainCoordinator: Coordinator {
     }
     
     func start() {
-        let vm = NewsViewModel()
-        vm.coordinator = self
+        let vm = NewsViewModel(coordinator: self)
         let vc = NewsViewController(viewModel: vm)
         navigationController.pushViewController(vc, animated: false)
     }

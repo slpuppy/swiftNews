@@ -11,14 +11,15 @@ protocol NewsViewModelProtocol {
     var articles: [Article] { get }
     var selectedCategory: NewsCategory { get }
     var categories: [NewsCategory] { get }
-    func loadMoreNews() async -> Result<Void, Error>
-    func selectCategory(category: NewsCategory)
+    func loadNews() async -> Result<Void, Error>
+    func loadNextPage() async -> Result<Void, Error>
+    func changeCategory(category: NewsCategory) async -> Result<Void, Error>?
     func presentArticle(articleIndex: Int)
 }
 
 class NewsViewModel: NewsViewModelProtocol {
     
-    weak var coordinator: MainCoordinator?
+    weak var coordinator: Coordinator?
     
     let networkingService: NewsNetworkingServiceProtocol
     
@@ -28,18 +29,38 @@ class NewsViewModel: NewsViewModelProtocol {
     
     var articles: [Article] = []
     
-    private var currentPage: Int = 0
+    private var currentPage: Int = 1
     private var pageSize: Int = 20
     
     // MARK: Initialization
     
-    init(networkingService: NewsNetworkingServiceProtocol = NewsNetworkingService()) {
+    init(networkingService: NewsNetworkingServiceProtocol = NewsNetworkingService(), coordinator: Coordinator) {
+        self.coordinator = coordinator
         self.networkingService = networkingService
     }
     
     // MARK: Public Methods
     
-    func loadMoreNews() async -> Result<Void, Error> {
+    func loadNews() async -> Result<Void, Error> {
+        currentPage = 1
+        let result = await networkingService.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
+            switch result {
+            case .success(let newsList):
+                guard let newArticles = newsList.articles else {
+                    return .failure(APIErrorResponse(status: "000", code: "No Data", message: "No data was found"))
+                }
+                self.articles = newArticles
+                filterContentlessArticles()
+                filterDescriptionlessArticles()
+                filterImagelessArticles()
+                formatNewsTitle()
+                return .success(())
+            case .failure(let error):
+                return .failure(error)
+            }
+    }
+    
+    func loadNextPage() async -> Result<Void, Error> {
             currentPage += 1
         let result = await networkingService.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
             switch result {
@@ -59,11 +80,28 @@ class NewsViewModel: NewsViewModelProtocol {
                 return .failure(error)
             }
     }
-
-    func selectCategory(category: NewsCategory) {
-        self.articles = []
-        self.currentPage = 0
-        self.selectedCategory = category
+    
+    func changeCategory(category: NewsCategory) async -> Result<Void, Error>? {
+        currentPage = 1
+        if category != selectedCategory {
+            self.selectedCategory = category
+            let result = await networkingService.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
+                switch result {
+                case .success(let newsList):
+                    guard let newArticles = newsList.articles else {
+                        return .failure(APIErrorResponse(status: "000", code: "No Data", message: "No data was found"))
+                    }
+                    self.articles = newArticles
+                    filterContentlessArticles()
+                    filterDescriptionlessArticles()
+                    filterImagelessArticles()
+                    formatNewsTitle()
+                    return .success(())
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+        return nil
     }
     
     func presentArticle(articleIndex: Int){
