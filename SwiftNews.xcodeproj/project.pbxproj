@@ -235,6 +235,7 @@
 			isa = PBXGroup;
 			children = (
 				751ECBCA2BF291E3007E78AD /* NewsCollectionViewHeader.swift */,
+				751ECBD92BF3FF05007E78AD /* NewsCollectionViewFooter.swift */,
 				751ECBB82BF25CE6007E78AD /* Cells */,
 			);
 			path = Components;
@@ -245,7 +246,6 @@
 			children = (
 				751ECBBD2BF26732007E78AD /* ArticleCell.swift */,
 				751ECBD52BF3D41F007E78AD /* CategoryCell.swift */,
-				751ECBD92BF3FF05007E78AD /* NewsCollectionViewFooter.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
