@@ -20,12 +20,17 @@ class NewsNetworkingService: NewsNetworkingServiceProtocol {
         session = URLSession(configuration: configuration)
     }
     
-    func getTopHeadlinesByCategory(category: String, pageSize: Int, page: Int) async throws -> ArticleListResponse {
-           let endpoint = NewsEndpoint.topHeadlinesByCategory(category, pageSize, page)
-           let (data, _) = try await session.data(for: endpoint.request)
-           return try parser.parseNewsData(data: data)
-       }
+    func getTopHeadlinesByCategory(category: String, pageSize: Int, page: Int) async -> Result<ArticleListResponse, Error> {
+        let endpoint = NewsEndpoint.topHeadlinesByCategory(category, pageSize, page)
+        do {
+            let (data, _) = try await session.data(for: endpoint.request)
+            let parsedData = try parser.parseNewsData(data: data)
+            return .success(parsedData)
+        } catch {
+            return .failure(error)
+        }
     }
+}    
 
 
 

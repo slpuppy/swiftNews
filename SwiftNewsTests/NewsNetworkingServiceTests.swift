@@ -21,10 +21,15 @@ final class NewsNetworkingServiceTests: XCTestCase {
     }
 
     func test_getTopHeadlinesByCategory_shouldReturn20ArticleList() async throws {
-        let uut = try await sut.getTopHeadlinesByCategory(category: NewsCategory.entertainment.rawValue, pageSize: 20, page: 1)
+        let uut =  await sut.getTopHeadlinesByCategory(category: NewsCategory.entertainment.rawValue, pageSize: 20, page: 1)
         
-        XCTAssertEqual("ok", uut.status)
-        XCTAssertEqual(20, uut.articles?.count)
+        switch uut {
+        case .success(let uut):
+            XCTAssertEqual("ok", uut.status)
+            XCTAssertEqual(20, uut.articles?.count)
+        case .failure(let failure):
+            XCTFail("Expected to success but failed")
+        }
     }
 
     func testPerformanceExample() throws {

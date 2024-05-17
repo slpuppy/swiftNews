@@ -94,17 +94,16 @@ class NewsViewController: UIViewController {
     
     private func fetchNews(){
         Task {
-            do {
-                let result = await viewModel.loadMoreNews()
-                switch result {
-                case .success:
-                    DispatchQueue.main.async {
-                        self.collectionView.reloadData()
-                    }
-                case .failure(let error):
-                    print("Failed to fetch: \(error)")
+            let result = await viewModel.loadMoreNews()
+            switch result {
+            case .success:
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
                 }
+            case .failure(let error):
+                print("Failed to fetch: \(error)")
             }
+            
         }
     }
 }
@@ -117,7 +116,6 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
         if category != viewModel.selectedCategory {
             viewModel.selectCategory(category: category)
             Task {
-                do {
                     let result = await viewModel.loadMoreNews()
                     switch result {
                     case .success:
@@ -129,7 +127,6 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
                     case .failure(let error):
                         print("Failed to fetch: \(error)")
                     }
-                }
             }
         } else {
             return

@@ -16,8 +16,8 @@ class NewsNetworkingServiceMock: NewsNetworkingServiceProtocol {
         self.parser = parser
     }
     
-    func getTopHeadlinesByCategory(category: String, pageSize: Int, page: Int) async throws -> ArticleListResponse {
-        return ArticleListResponseMock.response[page]
+    func getTopHeadlinesByCategory(category: String, pageSize: Int, page: Int) async -> Result<ArticleListResponse, Error>  {
+        return Result<ArticleListResponse, Error>.success(ArticleListResponseMock.response[page])
        }
     }
 
