@@ -76,7 +76,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "apiKey"
-            value = "ab87d356e75d473790640bcb283f170b"
+            value = "5efc6056bf3a46ce9cc5227c65cbb1e2"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

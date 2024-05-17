@@ -26,13 +26,6 @@ class NewsViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.tintColor = .white
-        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-        return refreshControl
-    }()
-    
     private var newsList: [Article] = []
     
     // MARK: Initialization
@@ -62,7 +55,6 @@ class NewsViewController: UIViewController {
         self.view.backgroundColor = UIColor(hex: "171717")
         view.addSubview(headerView)
         view.addSubview(collectionView)
-        collectionView.refreshControl = refreshControl
     }
     
     private func setupConstraints() {
@@ -100,26 +92,25 @@ class NewsViewController: UIViewController {
     
     // MARK: Private methods
     
-    private func fetchNews(){
+    private func fetchNews() {
         Task {
-            let result = await viewModel.loadMoreNews()
+            let result = await self.viewModel.loadMoreNews()
             switch result {
             case .success:
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
-                    self.refreshControl.endRefreshing()
                 }
-            case .failure:
+            case .failure(let error):
                 DispatchQueue.main.async {
-                    self.refreshControl.endRefreshing()
-                    self.showAlert(title: "Request limit reached", message: "Seems you've read too much news today")
+                    if let newsError = error as? APIErrorResponse {
+                        self.showAlert(title: "Network Error", message: newsError.message ?? "Unknown error")
+                    } else {
+                        self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
+                    }
                 }
+              
             }
         }
-    }
-    
-    @objc private func handleRefresh() {
-        fetchNews()
     }
 }
 
@@ -135,21 +126,22 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
                 switch result {
                 case .success:
                     DispatchQueue.main.async {
-                        self.headerView.updateSelectedCategory(selectedCategory: category)
-                        self.scrollToTopIfNeeded()
+                       self.headerView.updateSelectedCategory(selectedCategory: category)
                         self.collectionView.reloadData()
-                        self.refreshControl.endRefreshing()
+                        self.scrollToTopIfNeeded()
                     }
-                case .failure:
+                case .failure(let error):
                     DispatchQueue.main.async {
-                        self.refreshControl.endRefreshing()
-                        self.showAlert(title: "Network Error", message: "Request limit reached or missing data")
+                       if let newsError = error as? APIErrorResponse {
+                            self.showAlert(title: "Network Error", message: newsError.message ?? "Unknown error")
+                        } else {
+                            self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
+                        }
                     }
                 }
             }
         }
     }
-
     
     func didTapLoadMore() {
         self.fetchNews()

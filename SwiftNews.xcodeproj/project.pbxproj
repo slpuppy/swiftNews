@@ -36,11 +36,11 @@
 		751ECBF22BF64E15007E78AD /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBF12BF64E14007E78AD /* Coordinator.swift */; };
 		751ECBF42BF64EB9007E78AD /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBF32BF64EB9007E78AD /* MainCoordinator.swift */; };
 		751ECBF72BF66701007E78AD /* NewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBF62BF66701007E78AD /* NewsViewController.swift */; };
-		751ECBFC2BF66AC6007E78AD /* NewsNetworkingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBFB2BF66AC6007E78AD /* NewsNetworkingError.swift */; };
 		751ECBFE2BF66EA9007E78AD /* NewsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECBFD2BF66EA9007E78AD /* NewsViewModelTests.swift */; };
 		751ECC012BF66F49007E78AD /* NewsNetworkingServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECC002BF66F49007E78AD /* NewsNetworkingServiceMock.swift */; };
 		751ECC032BF66FFF007E78AD /* ArticleListResponseMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECC022BF66FFF007E78AD /* ArticleListResponseMock.swift */; };
 		751ECC052BF78626007E78AD /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = 751ECC042BF78626007E78AD /* Source.swift */; };
+		759637D42BF7DCDB002E5CD6 /* ApiErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759637D32BF7DCDB002E5CD6 /* ApiErrorResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,11 +94,11 @@
 		751ECBF12BF64E14007E78AD /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		751ECBF32BF64EB9007E78AD /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		751ECBF62BF66701007E78AD /* NewsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsViewController.swift; sourceTree = "<group>"; };
-		751ECBFB2BF66AC6007E78AD /* NewsNetworkingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsNetworkingError.swift; sourceTree = "<group>"; };
 		751ECBFD2BF66EA9007E78AD /* NewsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsViewModelTests.swift; sourceTree = "<group>"; };
 		751ECC002BF66F49007E78AD /* NewsNetworkingServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsNetworkingServiceMock.swift; sourceTree = "<group>"; };
 		751ECC022BF66FFF007E78AD /* ArticleListResponseMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListResponseMock.swift; sourceTree = "<group>"; };
 		751ECC042BF78626007E78AD /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
+		759637D32BF7DCDB002E5CD6 /* ApiErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiErrorResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +187,7 @@
 				751ECBDD2BF407B4007E78AD /* ApiEndPointProtocol.swift */,
 				751ECBA22BF2511D007E78AD /* ApiEndpointProtocol + Extesion.swift */,
 				751ECB9D2BF24EF7007E78AD /* HTTPMethod.swift */,
+				759637D32BF7DCDB002E5CD6 /* ApiErrorResponse.swift */,
 				751ECBB62BF25C9A007E78AD /* Endpoints */,
 				751ECBE12BF40859007E78AD /* Services */,
 				751ECBE02BF4083A007E78AD /* Parsing */,
@@ -273,7 +274,6 @@
 			children = (
 				751ECBAD2BF254B6007E78AD /* NewsNetworkingService.swift */,
 				751ECBDB2BF40785007E78AD /* NewsNetworkingServiceProtocol.swift */,
-				751ECBFB2BF66AC6007E78AD /* NewsNetworkingError.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -460,6 +460,7 @@
 				751ECBBE2BF26732007E78AD /* ArticleCell.swift in Sources */,
 				751ECBA32BF2511D007E78AD /* ApiEndpointProtocol + Extesion.swift in Sources */,
 				751ECBC72BF28F2A007E78AD /* UIColor + Extension.swift in Sources */,
+				759637D42BF7DCDB002E5CD6 /* ApiErrorResponse.swift in Sources */,
 				751ECBDA2BF3FF05007E78AD /* NewsCollectionViewFooter.swift in Sources */,
 				751ECBC02BF26842007E78AD /* NewsViewModel.swift in Sources */,
 				751ECB6F2BF24A0E007E78AD /* SceneDelegate.swift in Sources */,
@@ -473,7 +474,6 @@
 				751ECBF72BF66701007E78AD /* NewsViewController.swift in Sources */,
 				751ECBA02BF24F10007E78AD /* NewsEndpoint.swift in Sources */,
 				751ECB9E2BF24EF7007E78AD /* HTTPMethod.swift in Sources */,
-				751ECBFC2BF66AC6007E78AD /* NewsNetworkingError.swift in Sources */,
 				751ECBF22BF64E15007E78AD /* Coordinator.swift in Sources */,
 				751ECBF42BF64EB9007E78AD /* MainCoordinator.swift in Sources */,
 				751ECBC42BF27E79007E78AD /* UIImageView + Extension.swift in Sources */,

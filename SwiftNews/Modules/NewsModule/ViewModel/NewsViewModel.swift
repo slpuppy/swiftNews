@@ -46,7 +46,7 @@ class NewsViewModel: NewsViewModelProtocol {
             case .success(let newsList):
                 guard let newArticles = newsList.articles else {
                     currentPage -= 1
-                    return .failure(NewsNetworkingError.newsApiError("No data found ):"))
+                    return .failure(APIErrorResponse(status: "000", code: "No Data", message: "No data was found"))
                 }
                 self.articles.append(contentsOf: newArticles)
                 filterContentlessArticles()
@@ -56,16 +56,16 @@ class NewsViewModel: NewsViewModelProtocol {
                 return .success(())
             case .failure(let error):
                 currentPage -= 1
-                return .failure(NewsNetworkingError.newsApiError("Failed to fetch news: \(error.localizedDescription)"))
+                return .failure(error)
             case .none:
-                return .failure(NewsNetworkingError.newsApiError("Could't process result"))
+                currentPage -= 1
+                return .failure(APIErrorResponse(status: "999", code: "Unkwnown", message: "And unknonw server error ocurred"))
             }
     }
 
-    
     func selectCategory(category: NewsCategory) {
-        self.currentPage = 0
         self.articles = []
+        self.currentPage = 0
         self.selectedCategory = category
     }
     
