@@ -113,8 +113,8 @@ extension NewsCollectionViewHeader: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let category = categories?[indexPath.item] {
             self.delegate?.didTapCategory(category: category)
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
-       
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -15,8 +15,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="REALNEWS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YkO-PM-9FW">
-                                <rect key="frame" x="115" y="394" width="169" height="41"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="REALNEWS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YkO-PM-9FW">
+                                <rect key="frame" x="16" y="394" width="361" height="41"/>
                                 <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="35"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -26,10 +26,10 @@
                         <color key="backgroundColor" systemColor="viewFlipsideBackgroundColor"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="YkO-PM-9FW" secondAttribute="trailing" constant="109" id="TE0-f9-d4c"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="YkO-PM-9FW" secondAttribute="trailing" constant="16" id="TE0-f9-d4c"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="YkO-PM-9FW" secondAttribute="bottom" constant="383" id="Zdx-QP-QRO"/>
                             <constraint firstItem="YkO-PM-9FW" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="335" id="Znz-rI-X3L"/>
-                            <constraint firstItem="YkO-PM-9FW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="115" id="fDh-ON-s9B"/>
+                            <constraint firstItem="YkO-PM-9FW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="fDh-ON-s9B"/>
                         </constraints>
                     </view>
                 </viewController>

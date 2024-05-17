@@ -9,5 +9,5 @@ import Foundation
 
 enum NewsNetworkingError: Error {
     case invalidURL
-    case customError(String)
+    case newsApiError(String)
 }

@@ -26,6 +26,13 @@ class NewsViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = .white
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        return refreshControl
+    }()
+    
     private var newsList: [Article] = []
     
     // MARK: Initialization
@@ -55,6 +62,7 @@ class NewsViewController: UIViewController {
         self.view.backgroundColor = UIColor(hex: "171717")
         view.addSubview(headerView)
         view.addSubview(collectionView)
+        collectionView.refreshControl = refreshControl
     }
     
     private func setupConstraints() {
@@ -75,10 +83,10 @@ class NewsViewController: UIViewController {
     
     private func createCompositionalLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .absolute(224))
+                                              heightDimension: .absolute(260))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .absolute(224))
+                                               heightDimension: .absolute(260))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 16
@@ -99,12 +107,19 @@ class NewsViewController: UIViewController {
             case .success:
                 DispatchQueue.main.async {
                     self.collectionView.reloadData()
+                    self.refreshControl.endRefreshing()
                 }
-            case .failure(let error):
-                print("Failed to fetch: \(error)")
+            case .failure:
+                DispatchQueue.main.async {
+                    self.refreshControl.endRefreshing()
+                    self.showAlert(title: "Network Error", message: "Request limit reached or missing data")
+                }
             }
-            
         }
+    }
+    
+    @objc private func handleRefresh() {
+        fetchNews()
     }
 }
 
@@ -116,22 +131,25 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
         if category != viewModel.selectedCategory {
             viewModel.selectCategory(category: category)
             Task {
-                    let result = await viewModel.loadMoreNews()
-                    switch result {
-                    case .success:
-                        DispatchQueue.main.async {
-                            self.headerView.updateSelectedCategory(selectedCategory: category)
-                            self.scrollToTopIfNeeded()
-                            self.collectionView.reloadData()
-                        }
-                    case .failure(let error):
-                        print("Failed to fetch: \(error)")
+                let result = await viewModel.loadMoreNews()
+                switch result {
+                case .success:
+                    DispatchQueue.main.async {
+                        self.headerView.updateSelectedCategory(selectedCategory: category)
+                        self.scrollToTopIfNeeded()
+                        self.collectionView.reloadData()
+                        self.refreshControl.endRefreshing()
                     }
+                case .failure:
+                    DispatchQueue.main.async {
+                        self.refreshControl.endRefreshing()
+                        self.showAlert(title: "Network Error", message: "Request limit reached or missing data")
+                    }
+                }
             }
-        } else {
-            return
         }
     }
+
     
     func didTapLoadMore() {
         self.fetchNews()
@@ -198,6 +216,17 @@ extension NewsViewController {
     func scrollToTopIfNeeded() {
         if shouldScrollToTop() {
             scrollToTop()
+        }
+    }
+}
+
+extension NewsViewController {
+    func showAlert(title: String, message: String) {
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
         }
     }
 }

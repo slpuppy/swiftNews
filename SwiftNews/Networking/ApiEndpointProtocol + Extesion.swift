@@ -38,7 +38,7 @@ extension ApiEndpointProtocol {
                 
         else { fatalError("Invalid url! \(self)") }
         
-        print(url)
+       print(url)
         return url
     }
     
