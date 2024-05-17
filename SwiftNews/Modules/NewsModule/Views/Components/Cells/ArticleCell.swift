@@ -157,8 +157,11 @@ class ArticleCell: UICollectionViewCell {
     func configure(with article: Article) {
         titleLabel.text = article.title
         descriptionLabel.text = article.description
-        authorLabel.text = article.author
         sourceLabel.text = article.source.name.uppercased()
+        if let author = article.author {
+            authorLabel.text = author.isEmpty ? article.source.name : author
+        }
+        
         if let urlToImage = article.urlToImage,
            let url = URL(string: urlToImage) {
             image.downloaded(from: url)

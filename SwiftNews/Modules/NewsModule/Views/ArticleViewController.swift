@@ -207,7 +207,7 @@ class ArticleViewController: UIViewController {
         self.titleLabel.text = article.title
         self.contentLabel.text = article.content
         if let author = article.author {
-            authorLabel.text = "\(author) at \(article.source.name)"
+            authorLabel.text = author.isEmpty ? article.source.name : "\(author) at \(article.source.name)"
         } else {
             authorLabel.text = article.source.name
         }
