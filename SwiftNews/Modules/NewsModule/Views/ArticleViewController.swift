@@ -11,27 +11,12 @@ class ArticleViewController: UIViewController {
     
     private var article: Article
     
-    weak var coordinator: MainCoordinator?
-
-    init(article: Article) {
-        self.article = article
-        super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = UIColor(hex: "171717")
-        self.setupSubviews()
-        self.setupConstraints()
-        self.setupContent()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     private lazy var imageView: UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
-       return imageView
+        return imageView
     }()
     
     private lazy var imageOverlayView: UIView = {
@@ -112,8 +97,8 @@ class ArticleViewController: UIViewController {
             return outgoing
         }
         let image = UIImage(systemName: "arrow.up.right")
-               config.image = image
-               config.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
+        config.image = image
+        config.contentInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16)
         let button = UIButton(configuration: config)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -127,10 +112,28 @@ class ArticleViewController: UIViewController {
         button.addAction(action, for: .touchUpInside)
         return button
     }()
-
+    
+    // MARK: Initialization
+    
+    init(article: Article) {
+        self.article = article
+        super.init(nibName: nil, bundle: nil)
+        self.view.backgroundColor = UIColor(hex: "171717")
+        self.setupSubviews()
+        self.setupConstraints()
+        self.setupContent()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-}
+    }
+    
+    // MARK: UI Setup
     
     private func setupSubviews() {
         self.view.addSubview(imageView)
@@ -168,7 +171,7 @@ class ArticleViewController: UIViewController {
             publishDateLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16),
             publishDateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
         ])
-
+        
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: publishDateLabel.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -180,7 +183,7 @@ class ArticleViewController: UIViewController {
             authorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             authorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor)
         ])
-            
+        
         NSLayoutConstraint.activate([
             contentLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 8),
             contentLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -193,6 +196,8 @@ class ArticleViewController: UIViewController {
         ])
         
     }
+    
+    // MARK: Private methods
     
     private func setupContent() {
         if let urlToImage = article.urlToImage,
@@ -220,7 +225,7 @@ class ArticleViewController: UIViewController {
         if let url = URL(string: article.url) {
             UIApplication.shared.open(url)
         }
-}
+    }
     
     private func close(){
         self.dismiss(animated: true)

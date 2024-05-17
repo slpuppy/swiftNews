@@ -20,30 +20,31 @@ final class NewsViewModelTests: XCTestCase {
         self.viewModel = nil
     }
     
-    
-    func test_loadMoreNews_shouldReturnNextPage() {
-       
-        var totalArticles = 0
-        let getNewsExp = expectation(description: "newsFetched")
-        let loadMoreExp = expectation(description: "MoreNewsFetched")
-        viewModel.getNews() { _ in
-           getNewsExp.fulfill()
-        }
-        wait(for: [getNewsExp])
-        totalArticles = self.viewModel.articles?.count ?? 0
-     
-        self.viewModel.loadMoreNews { result in
-            switch result {
-            case .success():
-                loadMoreExp.fulfill()
-            case .failure(let failure):
-                XCTFail("Test Failed")
-            }
-        }
-        wait(for: [loadMoreExp])
-        XCTAssertGreaterThan((self.viewModel.articles!.count), totalArticles)
-}
-    
+    func test_loadMoreNews_shouldReturnNextPage() async throws {
+          
+            XCTAssertEqual(viewModel.articles.count, 0, "Initial articles count should be zero")
+         
+        let firstPageLoaded = expectation(description: "loaded page one")
+        
+        let result = await viewModel.loadMoreNews()
+          switch result {
+          case .success:
+              XCTAssertEqual(viewModel.articles.count, 20, "Articles count after loading first page should be 20")
+              firstPageLoaded.fulfill()
+          case .failure(let error):
+              XCTFail("Expected success, but got failure with error: \(error)")
+          }
+        
+            await fulfillment(of: [firstPageLoaded])
+        
+          let resultSecondPage = await viewModel.loadMoreNews()
+          switch resultSecondPage {
+          case .success:
+              XCTAssertEqual(viewModel.articles.count, 40, "Articles count after loading second page should be 40")
+          case .failure(let error):
+              XCTFail("Expected success, but got failure with error: \(error)")
+          }
+      }
     
 
     func testExample() throws {

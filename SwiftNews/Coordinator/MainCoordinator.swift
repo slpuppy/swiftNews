@@ -24,7 +24,6 @@ class MainCoordinator: Coordinator {
     
     func presentArticle(article: Article) {
         let vc = ArticleViewController(article: article)
-        vc.coordinator = self
         vc.modalPresentationStyle = .popover
         navigationController.present(vc, animated: true)
     }

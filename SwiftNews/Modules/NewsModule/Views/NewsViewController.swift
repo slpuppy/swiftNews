@@ -7,20 +7,9 @@
 
 import UIKit
 
-import UIKit
-
 class NewsViewController: UIViewController {
     
     private var viewModel: NewsViewModelProtocol
-    
-    init(viewModel: NewsViewModelProtocol) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     private let headerView = NewsCollectionViewHeader()
     
@@ -39,6 +28,17 @@ class NewsViewController: UIViewController {
     
     private var newsList: [Article] = []
     
+    // MARK: Initialization
+    
+    init(viewModel: NewsViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         self.navigationController?.isNavigationBarHidden = true
         super.viewDidLoad()
@@ -48,6 +48,8 @@ class NewsViewController: UIViewController {
         self.headerView.delegate = self
         self.fetchNews()
     }
+    
+    // MARK: UI Setup
     
     private func setupSubviews() {
         self.view.backgroundColor = UIColor(hex: "171717")
@@ -88,6 +90,8 @@ class NewsViewController: UIViewController {
         return layout
     }
     
+    // MARK: Private methods
+    
     private func fetchNews(){
         Task {
             do {
@@ -105,6 +109,8 @@ class NewsViewController: UIViewController {
     }
 }
 
+// MARK: Delegate methods
+
 extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterViewDelegate {
     
     func didTapCategory(category: NewsCategory) {
@@ -116,8 +122,8 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
                     switch result {
                     case .success:
                         DispatchQueue.main.async {
-                            self.scrollToTopIfNeeded()
                             self.headerView.updateSelectedCategory(selectedCategory: category)
+                            self.scrollToTopIfNeeded()
                             self.collectionView.reloadData()
                         }
                     case .failure(let error):
@@ -125,28 +131,13 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
                     }
                 }
             }
-
-             
-          
         } else {
             return
         }
     }
     
     func didTapLoadMore() {
-        Task {
-            do {
-                let result = await viewModel.loadMoreNews()
-                switch result {
-                case .success:
-                    DispatchQueue.main.async {
-                        self.collectionView.reloadData()
-                    }
-                case .failure(let error):
-                    print("Failed to fetch: \(error)")
-                }
-            }
-        }
+        self.fetchNews()
     }
 }
 
@@ -161,15 +152,13 @@ extension NewsViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         let article = viewModel.articles[indexPath.item]
-            cell.configure(with: article)
-            cell.layer.cornerRadius = 10
-            return cell
+        cell.configure(with: article)
+        cell.layer.cornerRadius = 10
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            let article = viewModel.articles[indexPath.row]
-            viewModel.presentArticle(article: article)
-        
+        viewModel.presentArticle(articleIndex: indexPath.row)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -215,6 +204,9 @@ extension NewsViewController {
         }
     }
 }
+
+
+
 
 
 

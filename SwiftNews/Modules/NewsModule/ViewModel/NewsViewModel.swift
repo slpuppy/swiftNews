@@ -13,37 +13,51 @@ protocol NewsViewModelProtocol {
     var categories: [NewsCategory] { get }
     func loadMoreNews() async -> Result<Void, Error>
     func selectCategory(category: NewsCategory)
-    func presentArticle(article: Article)
+    func presentArticle(articleIndex: Int)
 }
 
 class NewsViewModel: NewsViewModelProtocol {
     
     weak var coordinator: MainCoordinator?
+    
     let networkingService: NewsNetworkingServiceProtocol?
-    var articles: [Article] = []
+    
     var categories: [NewsCategory] = [.business, .entertainment, .health, .science, .sports, .tech]
+    
     var selectedCategory: NewsCategory = .all
+    
+    var articles: [Article] = []
     
     private var currentPage: Int = 0
     private var pageSize: Int = 20
+    
+    // MARK: Initialization
     
     init(networkingService: NewsNetworkingServiceProtocol = NewsNetworkingService()) {
         self.networkingService = networkingService
     }
     
+    // MARK: Public Methods
+    
     func loadMoreNews() async -> Result<Void, Error> {
         do {
             currentPage += 1
             let newsList = try await networkingService?.getTopHeadlinesByCategory(category: selectedCategory.rawValue, pageSize: pageSize, page: currentPage)
-            guard let newArticles = newsList?.articles else { return .success(()) }
+            
+            guard let newArticles = newsList?.articles else {
+                currentPage -= 1
+                return .failure(NewsNetworkingError.customError("No data found ):"))
+            }
+            
             self.articles.append(contentsOf: newArticles)
             filterContentlessArticles()
+            filterDescriptionlessArticles()
             filterImagelessArticles()
             formatNewsTitle()
             return .success(())
         } catch {
             currentPage -= 1
-            return .failure(error)
+            return .failure(NewsNetworkingError.customError("Failed to fetch news: \(error.localizedDescription)"))
         }
     }
     
@@ -53,9 +67,12 @@ class NewsViewModel: NewsViewModelProtocol {
         self.selectedCategory = category
     }
     
-    func presentArticle(article: Article){
+    func presentArticle(articleIndex: Int){
+        let article = articles[articleIndex]
         coordinator?.presentArticle(article: article)
     }
+    
+    // MARK: Private Methods
    
     private func filterImagelessArticles(){
         articles = articles.filter { $0.urlToImage != nil }
