@@ -122,8 +122,9 @@ class NewsViewController: UIViewController {
     
     @MainActor
     private func handleError(error: Error) {
+        self.refreshControl.endRefreshing()
         if let newsError = error as? APIErrorResponse {
-            self.showAlert(title: "Network Error", message: newsError.message ?? "Unknown error")
+            self.showAlert(title: "An Error ocurred", message: newsError.message ?? "Unknown error")
         } else {
             self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
         }

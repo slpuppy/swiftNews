@@ -66,6 +66,9 @@ class NewsViewModel: NewsViewModelProtocol {
                     currentPage -= 1
                     return .failure(APIErrorResponse(status: "", code: "Unknown Data", message: "Unable do decode data"))
                 }
+                if newArticles.isEmpty {
+                    return .failure(APIErrorResponse(status: "", code: "No results", message: "All news fetched"))
+                }
                 self.articles.append(contentsOf: newArticles)
                 self.setupArticles()
                 return .success(())
