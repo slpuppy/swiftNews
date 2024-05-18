@@ -127,24 +127,25 @@ class NewsViewController: UIViewController {
 extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterViewDelegate {
     
     func didTapCategory(category: NewsCategory) {
-        scrollToTopIfNeeded()
-
-        Task {
-            let result = await viewModel.changeCategory(category: category)
-            switch result {
-            case .success:
-                await MainActor.run {
-                    self.refreshControl.endRefreshing()
-                    self.headerView.updateSelectedCategory(selectedCategory: category)
-                    self.collectionView.reloadData()
+        scrollToTopIfNeeded {
+            Task {
+                let result = await self.viewModel.changeCategory(category: category)
+                switch result {
+                case .success:
+                    await MainActor.run {
+                        self.refreshControl.endRefreshing()
+                        self.headerView.updateSelectedCategory(selectedCategory: category)
+                        self.collectionView.reloadData()
+                    }
+                case .failure(let error):
+                    self.handleError(error: error)
+                case .none:
+                    return
                 }
-            case .failure(let error):
-                handleError(error: error)
-            case .none:
-                return
             }
         }
     }
+
     
     func didTapLoadMore() {
         Task {
@@ -219,9 +220,13 @@ extension NewsViewController: UICollectionViewDelegateFlowLayout {
 
 extension NewsViewController {
     
-    func scrollToTop() {
+    func scrollToTop(completion: (() -> Void)? = nil) {
         let indexPath = IndexPath(item: 0, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            completion?()
+        }
     }
     
     func shouldScrollToTop() -> Bool {
@@ -229,9 +234,11 @@ extension NewsViewController {
         return collectionView.contentOffset.y > yOffsetThreshold
     }
     
-    func scrollToTopIfNeeded() {
+    func scrollToTopIfNeeded(completion: (() -> Void)? = nil) {
         if shouldScrollToTop() {
-            scrollToTop()
+            scrollToTop(completion: completion)
+        } else {
+            completion?()
         }
     }
 }
