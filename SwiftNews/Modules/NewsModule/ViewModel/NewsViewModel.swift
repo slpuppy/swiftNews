@@ -67,7 +67,7 @@ class NewsViewModel: NewsViewModelProtocol {
             case .success(let newsList):
                 guard let newArticles = newsList.articles else {
                     currentPage -= 1
-                    return .failure(APIErrorResponse(status: "000", code: "No Data", message: "No data was found"))
+                    return .failure(APIErrorResponse(status: "", code: "Unknown Data", message: "Unable do decode data"))
                 }
                 self.articles.append(contentsOf: newArticles)
                 filterContentlessArticles()

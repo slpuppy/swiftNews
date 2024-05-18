@@ -26,6 +26,14 @@ class NewsViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        refreshControl.tintColor = .white
+        return refreshControl
+    }()
+    
+    
     private var newsList: [Article] = []
     
     // MARK: Initialization
@@ -55,6 +63,7 @@ class NewsViewController: UIViewController {
         self.view.backgroundColor = UIColor(hex: "171717")
         view.addSubview(headerView)
         view.addSubview(collectionView)
+        collectionView.refreshControl = refreshControl
     }
     
     private func setupConstraints() {
@@ -97,21 +106,20 @@ class NewsViewController: UIViewController {
             let result = await self.viewModel.loadNews()
             switch result {
             case .success:
-                DispatchQueue.main.async {
+                await MainActor.run {
+                    self.refreshControl.endRefreshing()
                     self.collectionView.reloadData()
                 }
             case .failure(let error):
-                DispatchQueue.main.async {
-                    if let newsError = error as? APIErrorResponse {
-                        self.showAlert(title: "Network Error", message: newsError.message ?? "Unknown error")
-                    } else {
-                        self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
-                    }
-                }
-                
+                handleError(error: error)
             }
         }
     }
+    
+    @objc private func handleRefresh() {
+        fetchNews()
+    }
+    
 }
 
 // MARK: Delegate methods
@@ -120,11 +128,13 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
     
     func didTapCategory(category: NewsCategory) {
         scrollToTopIfNeeded()
+
         Task {
             let result = await viewModel.changeCategory(category: category)
             switch result {
             case .success:
                 await MainActor.run {
+                    self.refreshControl.endRefreshing()
                     self.headerView.updateSelectedCategory(selectedCategory: category)
                     self.collectionView.reloadData()
                 }
@@ -164,7 +174,6 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
 extension NewsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("number of Items")
         return viewModel.articles.count
     }
     
@@ -172,7 +181,7 @@ extension NewsViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArticleNewsCell", for: indexPath) as? ArticleCell else {
             return UICollectionViewCell()
         }
-        print("cell")
+        
         let article = viewModel.articles[indexPath.item]
         cell.configure(with: article)
         cell.layer.cornerRadius = 10
