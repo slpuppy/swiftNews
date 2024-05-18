@@ -108,7 +108,7 @@ class NewsViewController: UIViewController {
             case .success:
                 await MainActor.run {
                     self.refreshControl.endRefreshing()
-                    self.collectionView.reloadData()
+                    self.reloadArticles()
                 }
             case .failure(let error):
                 handleError(error: error)
@@ -118,6 +118,22 @@ class NewsViewController: UIViewController {
     
     @objc private func handleRefresh() {
         fetchNews()
+    }
+    
+    @MainActor
+    private func handleError(error: Error) {
+        if let newsError = error as? APIErrorResponse {
+            self.showAlert(title: "Network Error", message: newsError.message ?? "Unknown error")
+        } else {
+            self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
+        }
+    }
+
+    @MainActor
+    private func reloadArticles() {
+        self.collectionView.performBatchUpdates {
+            self.collectionView.reloadSections(.init(integer: 0))
+        }
     }
     
 }
@@ -135,7 +151,7 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
                     await MainActor.run {
                         self.refreshControl.endRefreshing()
                         self.headerView.updateSelectedCategory(selectedCategory: category)
-                        self.collectionView.reloadData()
+                        self.reloadArticles()
                     }
                 case .failure(let error):
                     self.handleError(error: error)
@@ -153,23 +169,13 @@ extension NewsViewController: NewsCollectionViewHeaderDelegate, LoadMoreFooterVi
             switch result {
             case .success:
                 await MainActor.run {
-                    self.collectionView.reloadData()
+                    self.reloadArticles()
                 }
             case .failure(let error):
                 handleError(error: error)
             }
         }
     }
-    
-    @MainActor
-    private func handleError(error: Error) {
-        if let newsError = error as? APIErrorResponse {
-            self.showAlert(title: "Network Error", message: newsError.message ?? "Unknown error")
-        } else {
-            self.showAlert(title: "Unknown Error", message: "An unknown error occurred.")
-        }
-    }
-    
 }
 
 extension NewsViewController: UICollectionViewDataSource {
