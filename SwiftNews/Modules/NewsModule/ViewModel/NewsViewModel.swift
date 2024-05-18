@@ -92,10 +92,7 @@ class NewsViewModel: NewsViewModelProtocol {
                         return .failure(APIErrorResponse(status: "000", code: "No Data", message: "No data was found"))
                     }
                     self.articles = newArticles
-                    filterContentlessArticles()
-                    filterDescriptionlessArticles()
-                    filterImagelessArticles()
-                    formatNewsTitle()
+                    self.removeMissingInfoArticles()
                     return .success(())
                 case .failure(let error):
                     return .failure(error)
@@ -110,6 +107,13 @@ class NewsViewModel: NewsViewModelProtocol {
     }
     
     // MARK: Private Methods
+    
+    private func removeMissingInfoArticles(){
+        filterContentlessArticles()
+        filterDescriptionlessArticles()
+        filterImagelessArticles()
+        formatNewsTitle()
+    }
    
     private func filterImagelessArticles(){
         articles = articles.filter { $0.urlToImage != nil }
