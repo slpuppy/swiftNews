@@ -50,10 +50,7 @@ class NewsViewModel: NewsViewModelProtocol {
                     return .failure(APIErrorResponse(status: "000", code: "No Data", message: "No data was found"))
                 }
                 self.articles = newArticles
-                filterContentlessArticles()
-                filterDescriptionlessArticles()
-                filterImagelessArticles()
-                formatNewsTitle()
+                self.setupArticles()
                 return .success(())
             case .failure(let error):
                 return .failure(error)
@@ -70,10 +67,7 @@ class NewsViewModel: NewsViewModelProtocol {
                     return .failure(APIErrorResponse(status: "", code: "Unknown Data", message: "Unable do decode data"))
                 }
                 self.articles.append(contentsOf: newArticles)
-                filterContentlessArticles()
-                filterDescriptionlessArticles()
-                filterImagelessArticles()
-                formatNewsTitle()
+                self.setupArticles()
                 return .success(())
             case .failure(let error):
                 currentPage -= 1
@@ -92,7 +86,7 @@ class NewsViewModel: NewsViewModelProtocol {
                         return .failure(APIErrorResponse(status: "000", code: "No Data", message: "No data was found"))
                     }
                     self.articles = newArticles
-                    self.removeMissingInfoArticles()
+                    self.setupArticles()
                     return .success(())
                 case .failure(let error):
                     return .failure(error)
@@ -108,7 +102,7 @@ class NewsViewModel: NewsViewModelProtocol {
     
     // MARK: Private Methods
     
-    private func removeMissingInfoArticles(){
+    private func setupArticles(){
         filterContentlessArticles()
         filterDescriptionlessArticles()
         filterImagelessArticles()
